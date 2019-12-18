@@ -7,7 +7,10 @@
   "private": true,
   "scripts": {
     "build": "node_modules/.bin/tsc",
-    "start": "node ./dist/main.js"
+    "start": "node ./dist/main.js",
+    "compliance-report": "npm run compliance-setup && npm run compliance-infosec-audit",
+    "compliance-setup": "rimraf .compliance-reports && mkdir .compliance-reports",
+    "compliance-infosec-audit": "npm audit >> .compliance-reports/node-modules-audit.md"
   },
   "devDependencies": {
     "@types/hapi": "18.0.3",
@@ -17,6 +20,6 @@
     "typescript": "3.7.3"
   },
   "dependencies": {
-    "hapi": "18.1.0"
+    "@hapi/hapi": "18.4.0"
   }
 }
