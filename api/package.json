@@ -10,13 +10,13 @@
     "start": "node ./dist/main.js"
   },
   "devDependencies": {
-    "@types/hapi": "^18.0.3",
-    "@types/node": "^12.12.18",
-    "eslint": "^6.7.2",
-    "prettier": "^1.19.1",
-    "typescript": "^3.7.3"
+    "@types/hapi": "18.0.3",
+    "@types/node": "12.12.18",
+    "eslint": "6.7.2",
+    "prettier": "1.19.1",
+    "typescript": "3.7.3"
   },
   "dependencies": {
-    "hapi": "^18.1.0"
+    "hapi": "18.1.0"
   }
 }
