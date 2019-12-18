@@ -1,24 +1,44 @@
-import hapi, { Server, Request, ResponseToolkit } from 'hapi'
-import { initTxnsResource } from './txns/txns'
+import { GraphQLServer } from 'graphql-yoga'
+import 'reflect-metadata'
+import { buildSchema, registerEnumType } from 'type-graphql'
+import { CoreResolver } from './resolvers/CoreResolver'
+import { TxnResolver } from './resolvers/TxnResolver'
+import { FiatCcy, FiatTxnStatus } from './datamodel'
 
-const host = 'localhost'
-const port = 3333
-
-const server: Server = new hapi.Server({
-  host,
-  port,
+registerEnumType(FiatCcy, {
+  name: 'FiatCcy',
+  description: `
+  Supported by platform fiat currencies in a form of ISO4217:
+    * EUR for Euro
+    * GBP for British Pound
+    * USD for United States Dollar
+    * etc.
+  `,
 })
 
-initTxnsResource(server)
+registerEnumType(FiatTxnStatus, {
+  name: 'FiatTxnStatus',
+  description: `
+  Indicates status of the fiat payment transaction:
+  * Created: Transaction created.
+  * Initiated: Transaction initiated.
+  * Executed: Transaction executed.
+  * Cleared: Transaction cleared.
+  * Settled: Transaction settled, and everybody happy.
+  * Declined: Something went wrong, and transaction was declined.
+  `,
+})
 
-async function start() {
-  try {
-    await server.start()
-  } catch (error) {
-    console.error('Error:', error)
-  }
+async function bootstrap() {
+  const schema = await buildSchema({
+    resolvers: [CoreResolver, TxnResolver],
+    emitSchemaFile: true,
+  })
 
-  console.info(`RESTful API is Running on ${host}:${port}`)
+  const server = new GraphQLServer({
+    schema,
+  })
+  server.start(() => console.log('Server is running on http://localhost:4000'))
 }
 
-start()
+bootstrap()
