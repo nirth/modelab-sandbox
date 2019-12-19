@@ -7,7 +7,7 @@
   "private": true,
   "scripts": {
     "build": "rimraf ./dist && node_modules/.bin/tsc --skipLibCheck",
-    "start": "node ./dist/main.js",
+    "start": "npm run build && node ./dist/main.js",
     "compliance-report": "npm run compliance-setup && npm run compliance-infosec-audit",
     "compliance-setup": "rimraf .compliance-reports && mkdir .compliance-reports",
     "compliance-infosec-audit": "npm audit >> .compliance-reports/node-modules-audit.md"
