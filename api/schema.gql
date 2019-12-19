@@ -19,6 +19,7 @@ enum FiatCcy {
 }
 
 type FiatTxn {
+  internalId: String!
   status: String!
   amount: String!
   from: String!
@@ -33,10 +34,14 @@ type HealthStatus {
 }
 
 type Mutation {
-  createFiatTxn(currency: String!, amount: String!, counterParty: String!, from: String!): FiatTxn!
+  createFiatTxn(ccy: String!, amount: String!, counterParty: String!, from: String!): FiatTxn!
 }
 
 type Query {
   ping: String!
   health: HealthStatus!
+}
+
+type Subscription {
+  fiatTxnProcessing: FiatTxn!
 }

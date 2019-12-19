@@ -4,6 +4,9 @@ import { IFiatTxn, FiatCcy } from '../datamodel'
 @ObjectType()
 class FiatTxn implements IFiatTxn {
   @Field()
+  internalId: string
+
+  @Field()
   status: string
 
   @Field()

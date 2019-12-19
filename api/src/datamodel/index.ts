@@ -21,7 +21,9 @@ export type CryptoTxn = {
   amount: string
   currency: string // CryptoCcy
 }
+
 export type IFiatTxn = {
+  internalId: string
   status: string
   amount: string
   currency: FiatCcy

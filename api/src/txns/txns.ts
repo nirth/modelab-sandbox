@@ -1,3 +1,4 @@
+import uuid from 'uuid'
 import {
   PaymentInstrument,
   Amount,
@@ -15,6 +16,7 @@ const createTxn = (
   createdAt: Datetime
 ): IFiatTxn => {
   return {
+    internalId: uuid.v4(),
     status,
     from,
     counterParty,
