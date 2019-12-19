@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Form, FormInput, Segment } from 'semantic-ui-react'
+import { Form, FormInput, Segment, List } from 'semantic-ui-react'
 import { useMutation, useSubscription } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 
@@ -53,6 +53,8 @@ const handleSubmit = (
   // })
 }
 
+const txnReports = []
+
 const PaymentTxnInitiation = (props: any) => {
   const [formState, setFormState] = useState({
     amount: '',
@@ -64,11 +66,11 @@ const PaymentTxnInitiation = (props: any) => {
     { loading: mutationLoading, error: mutationError, data },
   ] = useMutation(createFiatTxnMutation)
 
-  const { data: subscriptionData } = useSubscription(
-    fiatTxnProcessingSubscription
-  )
+  const { data: txnReport } = useSubscription(fiatTxnProcessingSubscription)
 
-  console.log('subscriptionData:', JSON.stringify(subscriptionData))
+  if (txnReport !== undefined) {
+    txnReports.push(txnReport)
+  }
 
   if (mutationLoading === true) {
     return <div>Loading</div>
@@ -101,6 +103,13 @@ const PaymentTxnInitiation = (props: any) => {
         </Form.Group>
       </Form>
       {status}
+      {/* <List divided inverted relaxed>
+        {txnReports.map((txnReport: any) => (
+          <List.Item>
+            <List.Content>{JSON.stringify(txnReport)}</List.Content>
+          </List.Item>
+        ))}
+      </List> */}
     </Segment>
   )
 }
