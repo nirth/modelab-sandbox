@@ -1,6 +1,5 @@
 import React from 'react'
-import { initializeApi } from './initializeApi'
-import { ApiHealthStatus } from './ApiHealthStatus'
+import { ApiHealthStatus } from './delegates/ApiHealthStatus'
 import { PaymentTxnInitiation } from './InitiatePaymentTxn'
 
 export const App = () => {
