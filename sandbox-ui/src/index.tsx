@@ -1,5 +1,6 @@
 import React from 'react'
 import { render } from 'react-dom'
+import { BrowserRouter } from 'react-router-dom'
 import { ApolloProvider } from '@apollo/react-hooks'
 import 'semantic-ui-css/semantic.min.css'
 import { App } from './App'
@@ -9,9 +10,11 @@ import { initializeApi } from './initializeApi'
 const apolloClient = initializeApi()
 
 const reactRoot = (
-  <ApolloProvider client={apolloClient}>
-    <App />
-  </ApolloProvider>
+  <BrowserRouter>
+    <ApolloProvider client={apolloClient}>
+      <App />
+    </ApolloProvider>
+  </BrowserRouter>
 )
 
 const rootElement = document.getElementById('root')
