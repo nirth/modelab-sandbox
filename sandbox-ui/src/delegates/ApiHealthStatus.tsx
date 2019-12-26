@@ -7,14 +7,16 @@ const Online = () => <Icon name="cloud" color="green" />
 const Offline = () => <Icon name="cloud" flipped="vertically" color="red" />
 const Loading = () => <Icon name="sun outline" loading />
 
-const ApiHealthStatus = () => {
-  const { loading, error, data }: any = useQuery(gql`
-    {
-      health @client {
-        ok
-      }
+const healthQuery = gql`
+  {
+    health @client {
+      ok
     }
-  `)
+  }
+`
+
+const ApiHealthStatus = () => {
+  const { loading, error, data }: any = useQuery(healthQuery)
 
   if (loading) return <Loading />
   if (error) return <Offline />
