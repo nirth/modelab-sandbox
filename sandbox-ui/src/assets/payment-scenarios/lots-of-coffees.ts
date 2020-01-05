@@ -1,7 +1,7 @@
 import uuid from 'uuid'
 import { txFactory } from './utils'
 import { Scenario, TxType } from '../../datamodel/core'
-import { padMonthOrDate } from '../../utils'
+import { padNumber } from '../../utils'
 
 const payForCoffee = txFactory({
   type: TxType.Payment,
@@ -23,8 +23,8 @@ export const lotsOfCoffees: Scenario = {
   txs: Array.from({ length: 240 }).map((_: any, index: number) => {
     const month = index === 0 ? 1 : Math.ceil(index / 20)
     const day = index - (month - 1) * 20
-    const stringMonth = padMonthOrDate(month)
-    const stringDay = padMonthOrDate(day)
+    const stringMonth = padNumber(month)
+    const stringDay = padNumber(day)
     const datetime = `2020-${stringMonth}-${stringDay}T06:30:00.500Z`
 
     return payForCoffee({ datetime })

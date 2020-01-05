@@ -1,7 +1,7 @@
 import uuid from 'uuid'
 import { txFactory } from './utils'
 import { Scenario, TxType } from '../../datamodel/core'
-import { padMonthOrDate } from '../../utils'
+import { padNumber } from '../../utils'
 
 const directDebitAnnouncement = txFactory({
   type: TxType.DirectDebitAnnouncement,
@@ -35,7 +35,7 @@ export const utilityBills: Scenario = {
   txs: Array.from({ length: 12 })
     .map((_, index) => index + 1)
     .map((month: number) => {
-      const stringMonth = padMonthOrDate(month)
+      const stringMonth = padNumber(month)
 
       const announcement = directDebitAnnouncement({
         datetime: `2020-${stringMonth}-05T06:30:00.500Z`,

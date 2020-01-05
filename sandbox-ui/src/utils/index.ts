@@ -4,17 +4,19 @@
 // export const toSafeObject = (target: any) =>
 //   isDefinedObject(target) ? target : {}
 
-export const padMonthOrDate = (integer: number): string => {
-  const candidate = integer.toString()
-  const result = candidate.length < 2 ? `0${candidate}` : candidate
+export const padNumber = (integer: number, size = 2): string => {
+  let candidate = integer.toString()
+  while (candidate.length < size) {
+    candidate = '0' + candidate
+  }
 
-  return result
+  return candidate
 }
 
 export const toPrettyDate = (datetime: string): string => {
   const d = new Date(datetime)
-  const date = padMonthOrDate(d.getDate())
-  const month = padMonthOrDate(d.getMonth() + 1)
+  const date = padNumber(d.getDate())
+  const month = padNumber(d.getMonth() + 1)
   const year = d.getFullYear()
 
   return `${date}/${month}/${year}`

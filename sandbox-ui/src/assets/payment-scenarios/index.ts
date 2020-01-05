@@ -13,7 +13,7 @@ export const scenarios: Scenarios = [
     'Stable Salary and Utilities',
     'stable-salary-and-utilities',
     'Alice has a good job, and pays her bills!',
-    [stableSalary, occasionalCoffee, utilityBills]
+    [stableSalary, utilityBills]
   ),
   composeScenarios(
     'Stable Salary and Occasional Coffee',

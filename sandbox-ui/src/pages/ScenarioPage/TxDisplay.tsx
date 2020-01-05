@@ -40,7 +40,7 @@ const PaymentDisplay = (props: PaymentTx) => {
   const { amount, datetime } = props
   const isIncoming = parseFloat(amount) >= 0
   const color = isIncoming ? 'green' : 'red'
-  const icon = isIncoming ? 'caret square up' : 'caret square down'
+  const icon = isIncoming ? 'angle up' : 'angle down'
   const prettyDate = toPrettyDate(datetime)
 
   return (
@@ -79,7 +79,7 @@ const DirectDebitPaymentDisplay = (props: DirectDebitPaymentTx) => {
     <>
       <Header content="Direct Debit Payment" subheader={prettyDate} />
       <Label color="red" style={{ minWidth: '160px' }}>
-        <Icon name="caret square down" />£{amount}
+        <Icon name="angle down" />£{amount}
         <Label.Detail>Direct Debit</Label.Detail>
       </Label>
     </>

@@ -5,6 +5,13 @@ import { ScenariosMenu } from './delegates/ScenariosMenu'
 import { ScenarioPage } from './pages/ScenarioPage'
 import { Container, Menu } from 'semantic-ui-react'
 
+const containerStyles = {
+  marginTop: '12em',
+  width: '100vw',
+  paddingLeft: '2em',
+  paddingRight: '2em',
+}
+
 export const App = () => {
   return (
     <div>
@@ -20,7 +27,7 @@ export const App = () => {
         </Menu>
       </Container>
 
-      <Container style={{ marginTop: '6em' }}>
+      <Container style={containerStyles}>
         <Switch>
           <Route exact path="/">
             <div>Home!</div>
