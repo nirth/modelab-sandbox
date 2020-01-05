@@ -32,9 +32,8 @@ const RichDropdown = (props: RichDropdownProps) => {
       onChange={(e: any, { value }) =>
         dispatch({ type: 'VALUE_CHANGE', payload: value })
       }
+      style={{ minWidth: '400px' }}
       value={value}
-      fluid
-      floating
       selection
     />
   )

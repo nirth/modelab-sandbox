@@ -6,7 +6,40 @@ export type HealthStatus = {
   sidecars?: HealthStatus[]
 }
 
-export type SimpulatedPayment = {
+export enum TxType {
+  DirectDebitPayment = 'DIRECT_DEBIT_PAYMENT',
+  DirectDebitAnnouncement = 'DIRECT_DEBIT_ANNOUNCEMENT',
+  Payment = 'PAYMENT',
+}
+
+export type Tx = DirectDebitAnnouncementTx | DirectDebitPaymentTx | PaymentTx
+
+export type DirectDebitPaymentTx = {
+  type: TxType.DirectDebitPayment
+  datetime: string
+  amount: string
+  creditorCustomer: string
+  creditorBankAccount: string
+  sender: string
+  receiver: string
+  debitorCustomer: string
+  debitorBankAccount: string
+}
+
+export type DirectDebitAnnouncementTx = {
+  type: TxType.DirectDebitAnnouncement
+  datetime: string
+  amount: string
+  creditorCustomer: string
+  creditorBankAccount: string
+  sender: string
+  receiver: string
+  debitorCustomer: string
+  debitorBankAccount: string
+}
+
+export type PaymentTx = {
+  type: TxType.Payment
   datetime: string
   amount: string
   orderingCustomer: string
@@ -22,7 +55,7 @@ export type Scenario = {
   slug: string
   title: string
   description: string
-  payments: SimpulatedPayment[]
+  txs: Tx[]
 }
 
 export type Scenarios = Scenario[]

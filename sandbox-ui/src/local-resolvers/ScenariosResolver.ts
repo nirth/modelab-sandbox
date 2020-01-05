@@ -3,7 +3,38 @@ import { scenarios } from '../assets/payment-scenarios'
 import { Scenario } from '../datamodel/core'
 
 const ScenariosTypes = gql`
-  type SimpulatedPayment {
+  enum TxType {
+    DIRECT_DEBIT_PAYMENT
+    DIRECT_DEBIT_ANNOUNCEMENT
+    PAYMENT
+  }
+
+  type DirectDebitPaymentTx {
+    type: TxType
+    datetime: String
+    amount: String
+    creditorCustomer: String
+    creditorBankAccount: String
+    sender: String
+    receiver: String
+    debitorCustomer: String
+    debitorBankAccount: String
+  }
+
+  type DirectDebitAnnouncementTx {
+    type: TxType
+    datetime: String
+    amount: String
+    creditorCustomer: String
+    creditorBankAccount: String
+    sender: String
+    receiver: String
+    debitorCustomer: String
+    debitorBankAccount: String
+  }
+
+  type PaymentTx {
+    type: TxType
     datetime: String
     amount: String
     orderingCustomer: String
@@ -14,11 +45,13 @@ const ScenariosTypes = gql`
     beneficiaryBankAccount: String
   }
 
+  union Tx = DirectDebitAnnouncementTx | DirectDebitPaymentTx | PaymentTx
+
   type Scenario {
     id: String
     title: String
     description: String
-    payments: [SimpulatedPayment]
+    txs: [Tx]
   }
 
   type ScenariosResponse {
@@ -38,6 +71,11 @@ const typePatch = (typename: string) => (item: any) => ({
   __typename: typename,
 })
 
+const unionPatch = (unionMap: { [key: string]: string }) => (item: any) => ({
+  ...item,
+  __typename: unionMap[item.type],
+})
+
 const ScenariosResolver = {
   Query: {
     scenarios: (): ScenariosResponse => {
@@ -51,12 +89,26 @@ const ScenariosResolver = {
     ): ScenarioResponse => {
       const { slug } = variables
 
-      const scenario: ScenarioResponse = scenarios
+      const typedScenario: ScenarioResponse = scenarios
         .filter((scenario: Scenario) => scenario.slug === slug)
         .map(typePatch('Scenario'))
         .pop()
 
-      return scenario
+      if (typedScenario) {
+        const typedTxs = typedScenario.txs.map(
+          unionPatch({
+            DIRECT_DEBIT_ANNOUNCEMENT: 'DirectDebitAnnouncementTx',
+            DIRECT_DEBIT_PAYMENT: 'DirectDebitPaymentTx',
+            PAYMENT: 'PaymentTx',
+          })
+        )
+        return {
+          ...typedScenario,
+          txs: typedTxs,
+        }
+      }
+
+      throw new Error(`Unable to find scenario for slug: ${slug}`)
     },
   },
   Mutation: {},

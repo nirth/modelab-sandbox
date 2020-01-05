@@ -20,7 +20,7 @@ export const App = () => {
         </Menu>
       </Container>
 
-      <Container style={{ marginTop: '3em' }}>
+      <Container style={{ marginTop: '6em' }}>
         <Switch>
           <Route exact path="/">
             <div>Home!</div>

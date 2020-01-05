@@ -1,4 +1,5 @@
 module.exports = {
+  arrowParens: 'always',
   semi: false,
   parser: 'typescript',
   singleQuote: true,

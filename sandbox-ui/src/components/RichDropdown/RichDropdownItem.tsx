@@ -1,5 +1,5 @@
 import React from 'react'
-import { Segment, Header } from 'semantic-ui-react'
+import { Header } from 'semantic-ui-react'
 
 type RichDropdownItemProps = {
   title: string
@@ -9,12 +9,7 @@ type RichDropdownItemProps = {
 const RichDropdownItem = (props: RichDropdownItemProps) => {
   const { title, description } = props
 
-  return (
-    <Segment>
-      <Header as="h4">{title}</Header>
-      <p>{description}</p>
-    </Segment>
-  )
+  return <Header content={title} subheader={description} />
 }
 
 export { RichDropdownItem }
