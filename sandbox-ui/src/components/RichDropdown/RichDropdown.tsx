@@ -23,9 +23,12 @@ const RichDropdown = (props: RichDropdownProps) => {
 
   const parsedOptions = options.map(parseOptions)
 
+  console.log('Value?', value)
+
   return (
     <Dropdown
       placeholder="Choose Scenario"
+      button
       search={searchByTitle}
       options={parsedOptions}
       direction={direction}

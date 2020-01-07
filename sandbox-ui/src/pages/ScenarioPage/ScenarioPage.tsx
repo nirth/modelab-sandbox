@@ -3,11 +3,16 @@ import { useQuery } from '@apollo/react-hooks'
 import { useParams } from 'react-router-dom'
 import gql from 'graphql-tag'
 import { Dimmer, Loader, Container, Grid } from 'semantic-ui-react'
-import ReactAce from 'react-ace-editor'
+import AceEditor from 'react-ace'
+import 'ace-builds/src-noconflict/mode-javascript'
+import 'ace-builds/src-noconflict/theme-github'
 import { Tx, TxType } from '../../datamodel/core'
 import { ScenarioStatus } from './ScenarioStatus'
 import { TxList } from './TxList'
 import { evaluateApp } from '../../apps/evaluateApp'
+import { CompiledApp, Action, ActionType } from '../../datamodel/marketplace'
+import { sampleAppCode, emptyApp } from '../../apps/sample-app'
+import { Outcomes } from './Outcomes'
 
 const findScenarioQuery = gql`
   query FindScenario($slug: String!) @client {
@@ -43,23 +48,6 @@ const findScenarioQuery = gql`
   }
 `
 
-const codeSample = `
-onTx((tx) => {
-  console.log('onTx', tx.amount)
-  return true
-})
-
-onDirectDebitAnnouncement((tx) => {
-  const {amount} = tx
-  console.log('onDirectDebitAnnouncement', amount)
-  if (tx.amount > 500) {
-    return false
-  } else {
-    return true
-  }
-})
-`
-
 const LoadingState = (props: any) => (
   <Dimmer active>
     <Loader />
@@ -76,6 +64,8 @@ type ScenarioState = {
   txs: Tx[]
   balance: number
   appCode: string
+  compiledApp: CompiledApp
+  outcomes: Action[]
 }
 
 const initialState: ScenarioState = {
@@ -85,7 +75,9 @@ const initialState: ScenarioState = {
   txsLoaded: false,
   txs: [],
   balance: 0,
-  appCode: codeSample,
+  appCode: sampleAppCode,
+  compiledApp: evaluateApp(sampleAppCode),
+  outcomes: [],
 }
 
 const computeBalance = (balance: number, tx: Tx): number => {
@@ -103,13 +95,26 @@ const scenarioReducer = (state = initialState, { type, payload }) => {
       const { txs, id } = payload
       return { ...state, scenarioId: id, txsLoaded: true, txs }
     case 'ResetScenario':
-      return { ...state, currentTxIndex: -1 }
+      return {
+        ...state,
+        declinedTxIndicies: [],
+        balance: 0,
+        currentTxIndex: -1,
+        outcomes: [],
+      }
     case 'NextTx':
-      const { currentTxIndex, appCode } = state
+      const {
+        currentTxIndex,
+        appCode,
+        compiledApp: maybeCompiledApp,
+        outcomes,
+      } = state
       const nextTxIndex = currentTxIndex + 1
       const nextTx = state.txs[nextTxIndex]
+      const compiledApp =
+        maybeCompiledApp === emptyApp ? evaluateApp(appCode) : maybeCompiledApp
 
-      const [shouldContinueExecution, actions] = evaluateApp(appCode)(nextTx)
+      const [shouldContinueExecution, actions] = compiledApp(nextTx)
 
       if (shouldContinueExecution) {
         const nextBalance = computeBalance(state.balance, nextTx)
@@ -117,6 +122,8 @@ const scenarioReducer = (state = initialState, { type, payload }) => {
           ...state,
           balance: nextBalance,
           currentTxIndex: nextTxIndex,
+          outcomes: outcomes.concat(actions),
+          compiledApp,
         }
       } else {
         return {
@@ -125,11 +132,25 @@ const scenarioReducer = (state = initialState, { type, payload }) => {
           declinedTxIndicies: state.declinedTxIndicies.concat([
             nextTxIndex as any,
           ]),
+          outcomes: outcomes.concat(actions).concat([
+            {
+              type: ActionType.Declined,
+              payload: {
+                heading: 'Payment Declined',
+                body: `Transaction of ${nextTx.amount} is declined`,
+              },
+            },
+          ]),
+          compiledApp,
         }
       }
 
     case 'UpdateCode':
-      return { ...state, appCode: payload }
+      return {
+        ...state,
+        appCode: payload,
+        compiledApp: emptyApp,
+      }
     default:
       return state
   }
@@ -154,12 +175,19 @@ const ScenarioPage = () => {
   }
 
   if (state.txs?.length > 0) {
-    const { txs, currentTxIndex, declinedTxIndicies, balance } = state
+    const {
+      appCode,
+      txs,
+      currentTxIndex,
+      declinedTxIndicies,
+      balance,
+      outcomes,
+    } = state
 
     return (
-      <Container>
+      <Container style={{ minWidth: '100vw' }}>
         <Grid columns={3}>
-          <Grid.Column style={{ minWidth: '500px' }}>
+          <Grid.Column>
             <ScenarioStatus
               balance={balance}
               onPause={() => dispatch({ type: 'PauseScenario', payload: {} })}
@@ -174,16 +202,19 @@ const ScenarioPage = () => {
             />
           </Grid.Column>
           <Grid.Column>
-            <ReactAce
+            <AceEditor
               mode="javascript"
-              theme="eclipse"
-              setReadOnly={false}
-              style={{ height: '100%', width: '700px' }}
-              setValue={codeSample}
+              theme="github"
+              value={appCode}
+              setOptions={{ useWorker: false }}
+              style={{ height: '100%', width: '100%' }}
               onChange={(code: string) => {
                 dispatch({ type: 'UpdateCode', payload: code })
               }}
             />
+          </Grid.Column>
+          <Grid.Column>
+            <Outcomes outcomes={outcomes} />
           </Grid.Column>
         </Grid>
       </Container>

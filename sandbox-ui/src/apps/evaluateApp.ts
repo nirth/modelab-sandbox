@@ -1,18 +1,13 @@
 import { Tx, TxType } from '../datamodel/core'
 import { safeStringify } from '../utils'
+import { CompiledApp, Action } from '../datamodel/marketplace'
+import { createMarketApi } from './createMarketApi'
 
 /* eslint-disable no-new-func */
 
-export type Action = {
-  type: string
-  payload?: any
-}
-
-type EventHandler = (tx: Tx) => Action[]
-
 const downTheSingularity = (tx: Tx) => () => []
 
-const invoke = (results: boolean[], tx: Tx) => (handler: EventHandler) => {
+const invoke = (results: boolean[], tx: Tx) => (handler: CompiledApp) => {
   const result = handler(tx)
 
   if (typeof result === 'boolean') {
@@ -25,9 +20,9 @@ const invoke = (results: boolean[], tx: Tx) => (handler: EventHandler) => {
   }
 }
 
-export const evaluateApp = (code: string) => {
+export const evaluateApp = (code: string): CompiledApp => {
   const func = new Function(
-    'invokers',
+    'api',
     'tx',
     `
     // Nullify Window and Document for security reasons
@@ -35,7 +30,7 @@ export const evaluateApp = (code: string) => {
     const document = null
 
     const actions = [];
-    const {onTx, onPayment, onDirectDebitAnnouncement, onDirectDebitPayment} = invokers
+    const {onTx, onPayment, onDirectDebitAnnouncement, onDirectDebitPayment, notify} = api
 
     ${code}
 
@@ -49,8 +44,11 @@ export const evaluateApp = (code: string) => {
     const isDdPayment = tx.type === TxType.DirectDebitPayment
 
     const invocationResults = []
+    const actions: Action[] = []
+    const api = createMarketApi(actions)
 
-    const invokers = {
+    const updatedApi = {
+      ...api,
       onTx: invoke(invocationResults, tx),
       onPayment: isPayment ? invoke(invocationResults, tx) : downTheSingularity,
       onDirectDebitAnnouncement: isDdAnnouncement
@@ -61,7 +59,8 @@ export const evaluateApp = (code: string) => {
         : downTheSingularity,
     }
 
-    const actions = func(invokers, tx)
+    actions.push(...func(updatedApi, tx))
+
     const shouldContinueExecution = invocationResults.every(
       (result: boolean): boolean => result
     )

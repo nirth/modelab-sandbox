@@ -33,13 +33,21 @@ export const TxList = (props: TxListProps) => {
     <Segment
       style={{
         height: 'calc(100vh - 20em)',
-        overflow: 'hidden scroll',
+        overflowY: 'scroll',
+        overflowX: 'hidden',
       }}
     >
       {txs
         .map(addTxMetadata(currentTxIndex, declinedTxIndicies))
         .map((metadata: TxDisplayMetadata) => {
-          const { isCurrent, isDeclined, isPastTx, color, tx } = metadata
+          const {
+            isCurrent,
+            isDeclined,
+            isPastTx,
+            isNotification,
+            color,
+            tx,
+          } = metadata
           const { type, amount, datetime } = tx
           const key = `${type}--${datetime}--${amount}`
 
@@ -53,7 +61,10 @@ export const TxList = (props: TxListProps) => {
           const labelProps = {
             style: {
               transition: 'all ease-in 0.5s',
-              opacity: isDeclined || isPastTx ? 1 : 0,
+              opacity:
+                (isDeclined || isPastTx || isCurrent) && !isNotification
+                  ? 1
+                  : 0,
             },
             color: (isDeclined ? 'red' : 'olive') as any,
             content: isDeclined ? 'Declined' : 'Settled',
