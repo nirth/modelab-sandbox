@@ -1,6 +1,8 @@
-FROM nginx:alpine
+FROM tiangolo/node-frontend:10 as build-stage
+FROM nginx:1.15
 
-ADD ./build /usr/share/nginx/html
+# Copy the default nginx.conf provided by tiangolo/node-frontend
+COPY --from=build-stage /nginx.conf /etc/nginx/conf.d/default.conf
+COPY ./build /usr/share/nginx/html
 
-# MODE on phone pad is 6633
-# EXPOSE 6633
+

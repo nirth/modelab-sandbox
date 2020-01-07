@@ -6,6 +6,7 @@ import { lotsOfCoffees } from './lots-of-coffees'
 import { stableSalary } from './stable-salary'
 import { occasionalCoffee } from './occasional-coffee'
 import { utilityBills } from './utility-bills'
+import { coupleOfLargeDds } from './couple-of-large-dds'
 
 export const scenarios: Scenarios = [
   stableSalary,
@@ -13,7 +14,7 @@ export const scenarios: Scenarios = [
     'Stable Salary and Utilities',
     'stable-salary-and-utilities',
     'Alice has a good job, and pays her bills!',
-    [stableSalary, utilityBills]
+    [stableSalary, utilityBills, coupleOfLargeDds]
   ),
   composeScenarios(
     'Stable Salary and Occasional Coffee',

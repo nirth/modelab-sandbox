@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Tx } from '../../datamodel/core'
-import { Segment, SemanticCOLORS } from 'semantic-ui-react'
+import { Segment, SemanticCOLORS, Label } from 'semantic-ui-react'
 import { TxDisplay } from './TxDisplay'
 import { addTxMetadata } from './addTxMetadata'
 import { TxDisplayMetadata } from './datamodel'
@@ -8,10 +8,11 @@ import { TxDisplayMetadata } from './datamodel'
 type TxListProps = {
   currentTxIndex: number
   txs: Tx[]
+  declinedTxIndicies: number[]
 }
 
 export const TxList = (props: TxListProps) => {
-  const { currentTxIndex, txs } = props
+  const { currentTxIndex, txs, declinedTxIndicies } = props
 
   useEffect(() => {
     // TODO: I should use `useRef`, but it gave me too much headache.
@@ -36,12 +37,11 @@ export const TxList = (props: TxListProps) => {
       }}
     >
       {txs
-        .map(addTxMetadata(currentTxIndex))
+        .map(addTxMetadata(currentTxIndex, declinedTxIndicies))
         .map((metadata: TxDisplayMetadata) => {
-          const { isCurrent, isExecuted, color, tx } = metadata
+          const { isCurrent, isDeclined, isPastTx, color, tx } = metadata
           const { type, amount, datetime } = tx
           const key = `${type}--${datetime}--${amount}`
-          // const ref = isCurrent ? currentTxDisplayElement : undefined
 
           const style = {
             paddingTop: '0.2em',
@@ -50,15 +50,26 @@ export const TxList = (props: TxListProps) => {
             transition: 'all 250ms ease-in-out 0ms',
           }
 
+          const labelProps = {
+            style: {
+              transition: 'all ease-in 0.5s',
+              opacity: isDeclined || isPastTx ? 1 : 0,
+            },
+            color: (isDeclined ? 'red' : 'olive') as any,
+            content: isDeclined ? 'Declined' : 'Settled',
+            attached: 'top right' as any,
+          }
+
           return (
             <Segment
               data-current-tx={isCurrent ? 'yes' : 'no'}
               key={key}
               style={style}
-              secondary={isExecuted}
+              secondary={isPastTx}
               raised={isCurrent}
               color={color as SemanticCOLORS}
             >
+              <Label {...labelProps} />
               <TxDisplay tx={tx} />
             </Segment>
           )

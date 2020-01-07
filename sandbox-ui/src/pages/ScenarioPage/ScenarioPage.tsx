@@ -3,10 +3,11 @@ import { useQuery } from '@apollo/react-hooks'
 import { useParams } from 'react-router-dom'
 import gql from 'graphql-tag'
 import { Dimmer, Loader, Container, Grid } from 'semantic-ui-react'
-// import ReactAce from 'react-ace-editor'
+import ReactAce from 'react-ace-editor'
 import { Tx, TxType } from '../../datamodel/core'
 import { ScenarioStatus } from './ScenarioStatus'
 import { TxList } from './TxList'
+import { evaluateApp } from '../../apps/evaluateApp'
 
 const findScenarioQuery = gql`
   query FindScenario($slug: String!) @client {
@@ -42,6 +43,23 @@ const findScenarioQuery = gql`
   }
 `
 
+const codeSample = `
+onTx((tx) => {
+  console.log('onTx', tx.amount)
+  return true
+})
+
+onDirectDebitAnnouncement((tx) => {
+  const {amount} = tx
+  console.log('onDirectDebitAnnouncement', amount)
+  if (tx.amount > 500) {
+    return false
+  } else {
+    return true
+  }
+})
+`
+
 const LoadingState = (props: any) => (
   <Dimmer active>
     <Loader />
@@ -50,13 +68,24 @@ const LoadingState = (props: any) => (
 
 const ErrorState = (props: any) => <div>Oopsie dasie</div>
 
-const initialState = {
+type ScenarioState = {
+  scenarioId: string
+  currentTxIndex: number
+  declinedTxIndicies: number[]
+  txsLoaded: boolean
+  txs: Tx[]
+  balance: number
+  appCode: string
+}
+
+const initialState: ScenarioState = {
   scenarioId: '',
   currentTxIndex: -1,
+  declinedTxIndicies: [],
   txsLoaded: false,
   txs: [],
   balance: 0,
-  code: '',
+  appCode: codeSample,
 }
 
 const computeBalance = (balance: number, tx: Tx): number => {
@@ -76,31 +105,31 @@ const scenarioReducer = (state = initialState, { type, payload }) => {
     case 'ResetScenario':
       return { ...state, currentTxIndex: -1 }
     case 'NextTx':
-      const { currentTxIndex } = state
+      const { currentTxIndex, appCode } = state
       const nextTxIndex = currentTxIndex + 1
       const nextTx = state.txs[nextTxIndex]
-      const nextBalance = computeBalance(state.balance, nextTx)
 
-      // const compiledApp = new Function(
-      //   'tx',
-      //   `
-      //   const actions = [];
+      const [shouldContinueExecution, actions] = evaluateApp(appCode)(nextTx)
 
-      //   ${state.code}
-
-      //   return actions
-      // `
-      // )
-
-      // console.log('compiledApp', compiledApp, compiledApp(nextTx))
-
-      return {
-        ...state,
-        balance: nextBalance,
-        currentTxIndex: nextTxIndex,
+      if (shouldContinueExecution) {
+        const nextBalance = computeBalance(state.balance, nextTx)
+        return {
+          ...state,
+          balance: nextBalance,
+          currentTxIndex: nextTxIndex,
+        }
+      } else {
+        return {
+          ...state,
+          currentTxIndex: nextTxIndex,
+          declinedTxIndicies: state.declinedTxIndicies.concat([
+            nextTxIndex as any,
+          ]),
+        }
       }
+
     case 'UpdateCode':
-      return { ...state, code: payload }
+      return { ...state, appCode: payload }
     default:
       return state
   }
@@ -125,7 +154,7 @@ const ScenarioPage = () => {
   }
 
   if (state.txs?.length > 0) {
-    const { txs, currentTxIndex, balance } = state
+    const { txs, currentTxIndex, declinedTxIndicies, balance } = state
 
     return (
       <Container>
@@ -138,19 +167,23 @@ const ScenarioPage = () => {
               onReset={() => dispatch({ type: 'ResetScenario', payload: {} })}
               onNext={() => dispatch({ type: 'NextTx', payload: {} })}
             />
-            <TxList txs={txs} currentTxIndex={currentTxIndex} />
+            <TxList
+              txs={txs}
+              currentTxIndex={currentTxIndex}
+              declinedTxIndicies={declinedTxIndicies}
+            />
           </Grid.Column>
           <Grid.Column>
-            <div>Editor Goes Here</div>
-            {/* <ReactAce
+            <ReactAce
               mode="javascript"
               theme="eclipse"
               setReadOnly={false}
               style={{ height: '100%', width: '700px' }}
+              setValue={codeSample}
               onChange={(code: string) => {
                 dispatch({ type: 'UpdateCode', payload: code })
               }}
-            /> */}
+            />
           </Grid.Column>
         </Grid>
       </Container>
