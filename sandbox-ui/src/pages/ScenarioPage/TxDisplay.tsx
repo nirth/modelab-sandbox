@@ -1,5 +1,5 @@
 import React from 'react'
-import { Segment, Icon, Label, Header } from 'semantic-ui-react'
+import { Icon, Label, Header } from 'semantic-ui-react'
 import {
   TxType,
   Tx,
@@ -9,34 +9,11 @@ import {
 } from '../../datamodel/core'
 import { toPrettyDate } from '../../utils'
 
-// Crude, dirty, and fast way to calculate directionality of transaction.
-const resolveMetadata = (type: string, amount: string): [boolean, boolean] => {
-  const isNotification = type === TxType.DirectDebitAnnouncement
-  const isMoneyIn =
-    !isNotification && parseFloat(amount) >= 0 && type === TxType.Payment
-
-  return [isNotification, isMoneyIn]
-}
-
-const resolveTxColor = (isNotification: boolean, isMoneyIn: boolean): any => {
-  if (isNotification) {
-    return 'pink'
-  } else if (isMoneyIn) {
-    return 'olive'
-  } else if (!isMoneyIn) {
-    return 'red'
-  } else {
-    return 'grey'
-  }
-}
-
 type TxDisplayProps = {
-  current: boolean
-  executed: boolean
   tx: Tx
 }
 
-const PaymentDisplay = (props: PaymentTx) => {
+const Payment = (props: PaymentTx) => {
   const { amount, datetime } = props
   const isIncoming = parseFloat(amount) >= 0
   const color = isIncoming ? 'green' : 'red'
@@ -54,7 +31,7 @@ const PaymentDisplay = (props: PaymentTx) => {
   )
 }
 
-const DirectDebitAnnouncementDisplay = (props: DirectDebitAnnouncementTx) => {
+const DirectDebitAnnouncement = (props: DirectDebitAnnouncementTx) => {
   const { amount, datetime } = props
   const prettyDate = toPrettyDate(datetime)
 
@@ -71,7 +48,7 @@ const DirectDebitAnnouncementDisplay = (props: DirectDebitAnnouncementTx) => {
   )
 }
 
-const DirectDebitPaymentDisplay = (props: DirectDebitPaymentTx) => {
+const DirectDebitPayment = (props: DirectDebitPaymentTx) => {
   const { amount, datetime } = props
   const prettyDate = toPrettyDate(datetime)
 
@@ -88,32 +65,19 @@ const DirectDebitPaymentDisplay = (props: DirectDebitPaymentTx) => {
 
 export const TxDisplay = (props: TxDisplayProps) => {
   const {
-    current,
-    executed,
     tx,
-    tx: { type, amount },
+    tx: { type },
   } = props
 
-  const [isNotification, isMoneyIn] = resolveMetadata(type, amount)
-  const color = resolveTxColor(isNotification, isMoneyIn)
-
-  const style = {
-    marginLeft: current ? '0.5em' : '0em',
-    marginRight: current ? '0em' : '0.5em',
-    transition: 'all 250ms ease-in-out 0ms',
-  }
-
   return (
-    <Segment style={style} secondary={executed} raised={current} color={color}>
-      {type === TxType.Payment && <PaymentDisplay {...(tx as PaymentTx)} />}
+    <>
+      {type === TxType.Payment && <Payment {...(tx as PaymentTx)} />}
       {type === TxType.DirectDebitAnnouncement && (
-        <DirectDebitAnnouncementDisplay
-          {...(tx as DirectDebitAnnouncementTx)}
-        />
+        <DirectDebitAnnouncement {...(tx as DirectDebitAnnouncementTx)} />
       )}
       {type === TxType.DirectDebitPayment && (
-        <DirectDebitPaymentDisplay {...(tx as DirectDebitPaymentTx)} />
+        <DirectDebitPayment {...(tx as DirectDebitPaymentTx)} />
       )}
-    </Segment>
+    </>
   )
 }

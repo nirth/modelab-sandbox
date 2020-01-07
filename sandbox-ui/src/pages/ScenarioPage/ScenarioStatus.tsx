@@ -1,5 +1,5 @@
 import React from 'react'
-import { Segment, Icon, Button, Label, Header } from 'semantic-ui-react'
+import { Segment, Icon, Button, Header } from 'semantic-ui-react'
 
 type ScenarioControlsProps = {
   balance: number

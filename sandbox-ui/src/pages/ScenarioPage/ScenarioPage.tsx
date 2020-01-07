@@ -2,11 +2,11 @@ import React, { useReducer } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import { useParams } from 'react-router-dom'
 import gql from 'graphql-tag'
-import { Dimmer, Loader, Segment, Container, Grid } from 'semantic-ui-react'
-import ReactAce from 'react-ace-editor'
-import { TxDisplay } from './TxDisplay'
+import { Dimmer, Loader, Container, Grid } from 'semantic-ui-react'
+// import ReactAce from 'react-ace-editor'
 import { Tx, TxType } from '../../datamodel/core'
 import { ScenarioStatus } from './ScenarioStatus'
+import { TxList } from './TxList'
 
 const findScenarioQuery = gql`
   query FindScenario($slug: String!) @client {
@@ -81,18 +81,18 @@ const scenarioReducer = (state = initialState, { type, payload }) => {
       const nextTx = state.txs[nextTxIndex]
       const nextBalance = computeBalance(state.balance, nextTx)
 
-      const compiledApp = new Function(
-        'tx',
-        `
-        const actions = [];
+      // const compiledApp = new Function(
+      //   'tx',
+      //   `
+      //   const actions = [];
 
-        ${state.code}
+      //   ${state.code}
 
-        return actions
-      `
-      )
+      //   return actions
+      // `
+      // )
 
-      console.log('compiledApp', compiledApp, compiledApp(nextTx))
+      // console.log('compiledApp', compiledApp, compiledApp(nextTx))
 
       return {
         ...state,
@@ -138,25 +138,11 @@ const ScenarioPage = () => {
               onReset={() => dispatch({ type: 'ResetScenario', payload: {} })}
               onNext={() => dispatch({ type: 'NextTx', payload: {} })}
             />
-            <Segment>
-              {txs.map((tx: Tx, index: number) => {
-                const key = `${tx.type}--${tx.datetime}--${tx.amount}`
-                const isCurrent = currentTxIndex === index
-                const isExecuted = currentTxIndex > index
-
-                return (
-                  <TxDisplay
-                    key={key}
-                    current={isCurrent}
-                    executed={isExecuted}
-                    tx={tx}
-                  />
-                )
-              })}
-            </Segment>
+            <TxList txs={txs} currentTxIndex={currentTxIndex} />
           </Grid.Column>
           <Grid.Column>
-            <ReactAce
+            <div>Editor Goes Here</div>
+            {/* <ReactAce
               mode="javascript"
               theme="eclipse"
               setReadOnly={false}
@@ -164,7 +150,7 @@ const ScenarioPage = () => {
               onChange={(code: string) => {
                 dispatch({ type: 'UpdateCode', payload: code })
               }}
-            />
+            /> */}
           </Grid.Column>
         </Grid>
       </Container>

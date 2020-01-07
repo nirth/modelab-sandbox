@@ -6,7 +6,7 @@ import { ScenarioPage } from './pages/ScenarioPage'
 import { Container, Menu } from 'semantic-ui-react'
 
 const containerStyles = {
-  marginTop: '12em',
+  marginTop: '6em',
   width: '100vw',
   paddingLeft: '2em',
   paddingRight: '2em',

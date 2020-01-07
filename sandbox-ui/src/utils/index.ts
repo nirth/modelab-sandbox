@@ -1,16 +1,10 @@
-// export const isDefinedObject = (testee: any) =>
-//   typeof testee === 'object' && testee !== null
-
-// export const toSafeObject = (target: any) =>
-//   isDefinedObject(target) ? target : {}
-
 export const padNumber = (integer: number, size = 2): string => {
-  let candidate = integer.toString()
-  while (candidate.length < size) {
-    candidate = '0' + candidate
+  let result = integer.toString()
+  while (result.length < size) {
+    result = '0' + result
   }
 
-  return candidate
+  return result
 }
 
 export const toPrettyDate = (datetime: string): string => {
