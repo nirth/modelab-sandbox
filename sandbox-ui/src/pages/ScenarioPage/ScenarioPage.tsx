@@ -56,13 +56,20 @@ const LoadingState = (props: any) => (
 
 const ErrorState = (props: any) => <div>Oopsie dasie</div>
 
+type Balances = {
+  currentAccount: number
+  savingsAccount: number
+  securitiesAccount: number
+  bitcoinAccount: number
+}
+
 type ScenarioState = {
   scenarioId: string
   currentTxIndex: number
   declinedTxIndicies: number[]
   txsLoaded: boolean
   txs: Tx[]
-  balance: number
+  balances: Balances
   appCode: string
   compiledApp: CompiledApp
   outcomes: Action[]
@@ -74,7 +81,12 @@ const initialState: ScenarioState = {
   declinedTxIndicies: [],
   txsLoaded: false,
   txs: [],
-  balance: 0,
+  balances: {
+    currentAccount: 0,
+    savingsAccount: 0,
+    securitiesAccount: 0,
+    bitcoinAccount: 0,
+  },
   appCode: sampleAppCode,
   compiledApp: evaluateApp(sampleAppCode),
   outcomes: [],
@@ -89,7 +101,10 @@ const computeBalance = (balance: number, tx: Tx): number => {
   return balance
 }
 
-const scenarioReducer = (state = initialState, { type, payload }) => {
+const scenarioReducer = (
+  state = initialState,
+  { type, payload }
+): ScenarioState => {
   switch (type) {
     case 'TxsLoaded':
       const { txs, id } = payload
@@ -98,7 +113,12 @@ const scenarioReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         declinedTxIndicies: [],
-        balance: 0,
+        balances: {
+          currentAccount: 0,
+          savingsAccount: 0,
+          securitiesAccount: 0,
+          bitcoinAccount: 0,
+        },
         currentTxIndex: -1,
         outcomes: [],
       }
@@ -111,16 +131,34 @@ const scenarioReducer = (state = initialState, { type, payload }) => {
       } = state
       const nextTxIndex = currentTxIndex + 1
       const nextTx = state.txs[nextTxIndex]
+
+      if (nextTxIndex >= state.txs.length) {
+        return {
+          ...state,
+          outcomes: outcomes.concat({
+            type: ActionType.ScenarioFinished,
+            payload: {},
+          }),
+        }
+      }
+
       const compiledApp =
         maybeCompiledApp === emptyApp ? evaluateApp(appCode) : maybeCompiledApp
 
       const [shouldContinueExecution, actions] = compiledApp(nextTx)
 
       if (shouldContinueExecution) {
-        const nextBalance = computeBalance(state.balance, nextTx)
+        const nextBalance = computeBalance(
+          state.balances.currentAccount,
+          nextTx
+        )
+
         return {
           ...state,
-          balance: nextBalance,
+          balances: {
+            ...state.balances,
+            currentAccount: nextBalance,
+          },
           currentTxIndex: nextTxIndex,
           outcomes: outcomes.concat(actions),
           compiledApp,
@@ -158,10 +196,35 @@ const scenarioReducer = (state = initialState, { type, payload }) => {
 
 const ScenarioPage = () => {
   const { scenarioSlug } = useParams()
+
   const [state, dispatch] = useReducer(scenarioReducer, initialState)
   const { loading, error, data }: any = useQuery(findScenarioQuery, {
     variables: { slug: scenarioSlug },
   })
+  const scenarioSelected = scenarioSlug !== undefined
+
+  if (!scenarioSelected) {
+    return (
+      <Container style={{ minWidth: '100vw' }}>
+        <Grid columns={3}>
+          <Grid.Column>
+            <ScenarioStatus
+              currentAccount={0}
+              savingsAccount={0}
+              securitiesAccount={0}
+              bitcoinAccount={0}
+              onPause={() => dispatch({ type: 'PauseScenario', payload: {} })}
+              onPlay={() => dispatch({ type: 'PlayScenario', payload: {} })}
+              onReset={() => dispatch({ type: 'ResetScenario', payload: {} })}
+              onNext={() => dispatch({ type: 'NextTx', payload: {} })}
+            />
+          </Grid.Column>
+          <Grid.Column />
+          <Grid.Column />
+        </Grid>
+      </Container>
+    )
+  }
 
   if (loading || error) {
     return loading ? <LoadingState /> : <ErrorState />
@@ -180,16 +243,30 @@ const ScenarioPage = () => {
       txs,
       currentTxIndex,
       declinedTxIndicies,
-      balance,
+      balances: {
+        currentAccount,
+        savingsAccount,
+        securitiesAccount,
+        bitcoinAccount,
+      },
       outcomes,
     } = state
 
     return (
-      <Container style={{ minWidth: '100vw' }}>
+      <Container
+        style={{
+          minWidth: '100vw',
+          paddingLeft: '1.5em',
+          paddingRight: '1.5em',
+        }}
+      >
         <Grid columns={3}>
           <Grid.Column>
             <ScenarioStatus
-              balance={balance}
+              currentAccount={currentAccount}
+              savingsAccount={savingsAccount}
+              securitiesAccount={securitiesAccount}
+              bitcoinAccount={bitcoinAccount}
               onPause={() => dispatch({ type: 'PauseScenario', payload: {} })}
               onPlay={() => dispatch({ type: 'PlayScenario', payload: {} })}
               onReset={() => dispatch({ type: 'ResetScenario', payload: {} })}

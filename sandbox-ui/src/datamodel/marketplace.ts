@@ -11,6 +11,7 @@ export enum NotificationChannel {
 export enum ActionType {
   Notification = 'NOTIFICATION',
   Declined = 'DECLINED',
+  ScenarioFinished = 'SCENARIO_FINISHED',
 }
 
 export type Action = {

@@ -1,6 +1,6 @@
 {
   "name": "sandbox-ui",
-  "version": "0.2.0",
+  "version": "0.2.3",
   "private": true,
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",

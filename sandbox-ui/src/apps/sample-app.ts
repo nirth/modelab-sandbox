@@ -14,7 +14,11 @@ onDirectDebitAnnouncement((tx) => {
     notify(
       ['PREFERRED', 'EMAIL'],
       'Abnormaly High Direct Debit',
-      'Direct Debit from ' + creditorCustomer + ' is abnormaly high at ' + amount + '.'
+      'Direct Debit from '
+      + creditorCustomer
+      + ' is abnormaly high at '
+      + amount
+      + '.'
     )
   } 
   return true
@@ -28,4 +32,5 @@ onDirectDebitPayment((tx) => {
   } 
   return true
 })
+
 `

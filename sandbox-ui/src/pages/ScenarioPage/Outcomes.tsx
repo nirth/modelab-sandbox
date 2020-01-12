@@ -6,6 +6,19 @@ type OutcomeProps = {
   outcomes: Action[]
 }
 
+const randomEnding = () => {
+  const endings = [
+    'Finita la Commedia',
+    'Thanks For All the Fish',
+    'Our Princess is in Another Castle',
+    'That’s All Folks',
+  ]
+
+  const randomIndex = Math.floor(Math.random() * endings.length)
+
+  return endings[randomIndex]
+}
+
 export const Outcomes = (props: OutcomeProps) => {
   const { outcomes } = props
 
@@ -41,6 +54,18 @@ export const Outcomes = (props: OutcomeProps) => {
                 content={action.payload.heading}
                 subheader={action.payload.body}
               />
+            </Segment>
+          )
+        } else if (action.type === ActionType.ScenarioFinished) {
+          return (
+            <Segment key={index}>
+              <Label
+                color="purple"
+                attached="top right"
+                content="Scenario Finished"
+                icon="frown outline"
+              />
+              <Header content={randomEnding()} />
             </Segment>
           )
         }

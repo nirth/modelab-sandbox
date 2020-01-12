@@ -8,13 +8,11 @@ import { Container, Menu } from 'semantic-ui-react'
 const containerStyles = {
   marginTop: '6em',
   width: '100vw',
-  paddingLeft: '2em',
-  paddingRight: '2em',
 }
 
 export const App = () => {
   return (
-    <div>
+    <>
       <Container>
         <Menu fixed="top" inverted>
           <Menu.Item>
@@ -29,9 +27,7 @@ export const App = () => {
 
       <Container style={containerStyles}>
         <Switch>
-          <Route exact path="/">
-            <div>Home!</div>
-          </Route>
+          <Route exact path="/" component={ScenarioPage} />
           <Route
             exact
             path="/scenarios/:scenarioSlug"
@@ -39,6 +35,6 @@ export const App = () => {
           />
         </Switch>
       </Container>
-    </div>
+    </>
   )
 }
