@@ -1,0 +1,8 @@
+body {
+  height: auto;
+}
+
+.boring.text {
+  opacity: 0.85;
+  font-size: 8pt;
+}

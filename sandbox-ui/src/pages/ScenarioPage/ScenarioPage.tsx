@@ -194,9 +194,14 @@ const scenarioReducer = (
   }
 }
 
+const containerStyles = {
+  minWidth: '100vw',
+  paddingLeft: '1.5em',
+  paddingRight: '1.5em',
+}
+
 const ScenarioPage = () => {
   const { scenarioSlug } = useParams()
-
   const [state, dispatch] = useReducer(scenarioReducer, initialState)
   const { loading, error, data }: any = useQuery(findScenarioQuery, {
     variables: { slug: scenarioSlug },
@@ -205,7 +210,7 @@ const ScenarioPage = () => {
 
   if (!scenarioSelected) {
     return (
-      <Container style={{ minWidth: '100vw' }}>
+      <Container style={containerStyles}>
         <Grid columns={3}>
           <Grid.Column>
             <ScenarioStatus
@@ -235,6 +240,8 @@ const ScenarioPage = () => {
     (state.txsLoaded === false && data?.scenario?.txs?.length > 0)
   ) {
     dispatch({ type: 'TxsLoaded', payload: data.scenario })
+  } else {
+    console.log('Scenario Changed!')
   }
 
   if (state.txs?.length > 0) {
@@ -253,13 +260,7 @@ const ScenarioPage = () => {
     } = state
 
     return (
-      <Container
-        style={{
-          minWidth: '100vw',
-          paddingLeft: '1.5em',
-          paddingRight: '1.5em',
-        }}
-      >
+      <Container style={containerStyles}>
         <Grid columns={3}>
           <Grid.Column>
             <ScenarioStatus
