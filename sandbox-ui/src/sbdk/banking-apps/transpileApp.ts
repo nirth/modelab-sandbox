@@ -1,6 +1,6 @@
-import { Tx, TxType } from '../datamodel/core'
-import { safeStringify } from '../utils'
-import { CompiledApp, Action } from '../datamodel/marketplace'
+import { Tx, TxType } from '../datamodel'
+import { safeStringify } from '../../utils'
+import { CompiledApp, Action } from '../../datamodel/marketplace'
 import { createMarketApi } from './createMarketApi'
 
 /* eslint-disable no-new-func */
@@ -20,7 +20,7 @@ const invoke = (results: boolean[], tx: Tx) => (handler: CompiledApp) => {
   }
 }
 
-export const evaluateApp = (code: string): CompiledApp => {
+export const transpileApp = (code: string): CompiledApp => {
   const func = new Function(
     'api',
     'tx',
@@ -39,7 +39,7 @@ export const evaluateApp = (code: string): CompiledApp => {
   )
 
   return (tx: Tx) => {
-    const isPayment = tx.type === TxType.Payment
+    const isPayment = tx.type === TxType.CreditTransfer
     const isDdAnnouncement = tx.type === TxType.DirectDebitAnnouncement
     const isDdPayment = tx.type === TxType.DirectDebitPayment
 

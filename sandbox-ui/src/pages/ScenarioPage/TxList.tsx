@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Tx } from '../../datamodel/core'
+import { Tx } from '../../sbdk/datamodel'
 import { Segment, SemanticCOLORS, Label } from 'semantic-ui-react'
 import { TxDisplay } from './TxDisplay'
 import { addTxMetadata } from './addTxMetadata'

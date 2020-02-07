@@ -23,3 +23,6 @@ export const safeStringify = (data: any): string => {
     return '[Unable to JSON.stringify]'
   }
 }
+
+export const isDefinedObject = (candidate: any): boolean =>
+  typeof candidate === 'object' && candidate !== null && candidate !== undefined

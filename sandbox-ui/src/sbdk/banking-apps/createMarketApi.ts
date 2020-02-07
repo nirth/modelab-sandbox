@@ -3,7 +3,7 @@ import {
   Action,
   NotifyOperation,
   ActionType,
-} from '../datamodel/marketplace'
+} from '../../datamodel/marketplace'
 
 const notify = (actions: Action[]): NotifyOperation => (
   channels: NotificationChannel[],

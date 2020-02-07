@@ -1,5 +1,5 @@
-import { Tx } from '../datamodel/core'
-import { CompiledApp } from '../datamodel/marketplace'
+import { Tx } from '../datamodel'
+import { CompiledApp } from '../../datamodel/marketplace'
 
 export const emptyApp: CompiledApp = (tx: Tx) => [true, []]
 

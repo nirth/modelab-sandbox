@@ -1,21 +1,29 @@
 import uuid from 'uuid'
 import { txFactory } from './utils'
-import { Scenario, TxType } from '../../datamodel/core'
+import {
+  DirectDebitAnnouncementTx,
+  DirectDebitPaymentTx,
+  Scenario,
+  TxFactory,
+  TxType,
+} from '../../sbdk/datamodel'
 import { padNumber } from '../../utils'
 
-const directDebitAnnouncement = txFactory({
-  type: TxType.DirectDebitAnnouncement,
-  datetime: '2020-01-05T06:30:00.500Z',
-  amount: '100',
-  creditorCustomer: 'Claus Water and Electricity',
-  creditorBankAccount: '999999',
-  sender: 'Banky Bank',
-  receiver: 'Mode',
-  debitorCustomer: 'Alice',
-  debitorBankAccount: '343434',
-})
+const directDebitAnnouncement: TxFactory<DirectDebitAnnouncementTx> = txFactory(
+  {
+    type: TxType.DirectDebitAnnouncement,
+    datetime: '2020-01-05T06:30:00.500Z',
+    amount: '100',
+    creditorCustomer: 'Claus Water and Electricity',
+    creditorBankAccount: '999999',
+    sender: 'Banky Bank',
+    receiver: 'Mode',
+    debitorCustomer: 'Alice',
+    debitorBankAccount: '343434',
+  }
+)
 
-const directDebitPayment = txFactory({
+const directDebitPayment: TxFactory<DirectDebitPaymentTx> = txFactory({
   type: TxType.DirectDebitPayment,
   datetime: '2020-01-16T06:30:00.500Z',
   amount: '100',

@@ -1,4 +1,4 @@
-import { Tx } from '../../datamodel/core'
+import { Tx } from '../../sbdk/datamodel'
 
 export type TxDisplayMetadata = {
   isCurrent: boolean
