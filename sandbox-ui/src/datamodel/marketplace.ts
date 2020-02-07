@@ -1,4 +1,4 @@
-import { Tx } from './core'
+import { Tx } from '../sbdk/datamodel'
 
 export enum NotificationChannel {
   Preferred = 'PREFERRED',

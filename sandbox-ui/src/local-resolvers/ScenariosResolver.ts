@@ -1,6 +1,6 @@
 import gql from 'graphql-tag'
 import { scenarios } from '../assets/payment-scenarios'
-import { Scenario } from '../datamodel/core'
+import { Scenario } from '../sbdk/datamodel'
 
 const ScenariosTypes = gql`
   enum TxType {

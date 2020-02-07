@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { Dropdown } from 'semantic-ui-react'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
-import { Scenarios, Scenario } from '../datamodel/core'
+import { Scenarios, Scenario } from '../sbdk/datamodel'
 import { RichDropdown } from '../components/RichDropdown'
 
 const scenariosQuery = gql`

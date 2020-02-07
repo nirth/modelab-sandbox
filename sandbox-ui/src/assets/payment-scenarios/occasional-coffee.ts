@@ -1,18 +1,18 @@
 import uuid from 'uuid'
 import { txFactory } from './utils'
-import { Scenario, TxType } from '../../datamodel/core'
+import { Scenario, TxType } from '../../sbdk/datamodel'
 import { padNumber } from '../../utils'
 
 const payForCoffee = txFactory({
-  type: TxType.Payment,
+  type: TxType.CreditTransfer,
   datetime: '2020-01-10T06:30:00.500Z',
   amount: '-2.80',
-  orderingCustomer: 'Alice',
-  orderingBankAccount: '343434',
+  debitorCustomer: 'Alice',
+  debitorBankAccount: '343434',
   sender: 'Mode',
   receiver: 'Banky Bank',
-  beneficiaryCustomer: 'Boozy Coffees',
-  beneficiaryBankAccount: '454545',
+  creditorCustomer: 'Boozy Coffees',
+  creditorBankAccount: '454545',
 })
 
 export const occasionalCoffee: Scenario = {

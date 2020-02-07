@@ -1,6 +1,6 @@
 import uuid from 'uuid'
 import { txFactory } from './utils'
-import { Scenario, TxType } from '../../datamodel/core'
+import { Scenario, TxType } from '../../sbdk/datamodel'
 import { padNumber } from '../../utils'
 
 const directDebitAnnouncement = txFactory({

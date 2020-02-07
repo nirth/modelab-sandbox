@@ -1,4 +1,4 @@
-import { Tx, TxType } from '../datamodel/core'
+import { Tx, TxType } from '../sbdk/datamodel'
 import { safeStringify } from '../utils'
 import { CompiledApp, Action } from '../datamodel/marketplace'
 import { createMarketApi } from './createMarketApi'
@@ -39,7 +39,7 @@ export const evaluateApp = (code: string): CompiledApp => {
   )
 
   return (tx: Tx) => {
-    const isPayment = tx.type === TxType.Payment
+    const isPayment = tx.type === TxType.CreditTransfer
     const isDdAnnouncement = tx.type === TxType.DirectDebitAnnouncement
     const isDdPayment = tx.type === TxType.DirectDebitPayment
 

@@ -1,4 +1,4 @@
-import { Tx } from '../datamodel/core'
+import { Tx } from '../sbdk/datamodel'
 import { CompiledApp } from '../datamodel/marketplace'
 
 export const emptyApp: CompiledApp = (tx: Tx) => [true, []]

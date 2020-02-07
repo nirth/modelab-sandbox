@@ -1,4 +1,4 @@
-import { Tx } from '../../datamodel/core'
+import { Tx } from '../../sbdk/datamodel'
 import { TxDisplayMetadata } from './datamodel'
 import { resolveTxDirection } from './resolveTxDirection'
 import { resolveTxColor } from './resolveTxColor'

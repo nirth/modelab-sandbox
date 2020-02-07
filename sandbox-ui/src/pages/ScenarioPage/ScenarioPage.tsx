@@ -6,7 +6,7 @@ import { Dimmer, Loader, Container, Grid } from 'semantic-ui-react'
 import AceEditor from 'react-ace'
 import 'ace-builds/src-noconflict/mode-javascript'
 import 'ace-builds/src-noconflict/theme-github'
-import { Tx, TxType } from '../../datamodel/core'
+import { Tx, TxType } from '../../sbdk/datamodel'
 import { ScenarioStatus } from './ScenarioStatus'
 import { TxList } from './TxList'
 import { evaluateApp } from '../../apps/evaluateApp'
@@ -37,11 +37,11 @@ const findScenarioQuery = gql`
           debitorCustomer
           debitorBankAccount
         }
-        ... on PaymentTx @client {
-          orderingCustomer
-          orderingBankAccount
-          beneficiaryCustomer
-          beneficiaryBankAccount
+        ... on CreditTransferTx @client {
+          creditorCustomer
+          creditorBankAccount
+          debitorCustomer
+          debitorBankAccount
         }
       }
     }
@@ -95,7 +95,7 @@ const initialState: ScenarioState = {
 const computeBalance = (balance: number, tx: Tx): number => {
   if (tx.type === TxType.DirectDebitPayment) {
     return balance - parseFloat(tx.amount)
-  } else if (tx.type === TxType.Payment) {
+  } else if (tx.type === TxType.CreditTransfer) {
     return balance + parseFloat(tx.amount)
   }
   return balance

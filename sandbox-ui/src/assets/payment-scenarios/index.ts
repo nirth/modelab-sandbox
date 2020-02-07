@@ -1,4 +1,4 @@
-import { Scenarios } from '../../datamodel/core'
+import { Scenarios } from '../../sbdk/datamodel'
 
 import { composeScenarios } from './utils'
 
