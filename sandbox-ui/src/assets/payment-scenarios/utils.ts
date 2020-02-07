@@ -1,9 +1,10 @@
 import { Scenario, Scenarios, Tx } from '../../sbdk/datamodel'
 import uuid from 'uuid'
 
-export const txFactory = (payload: Tx) => (overrides: any): Tx => {
-  return { ...payload, ...overrides }
-}
+export const txFactory = (payload: Tx) => (overrides: any): Tx => ({
+  ...payload,
+  ...overrides,
+})
 
 export const composeScenarios = (
   title: string,
