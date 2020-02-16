@@ -1,3 +1,11 @@
+export type Individual = {
+  name: string
+}
+
+export type NaturalPerson = {
+  name: string
+}
+
 export enum PartyIdentifier {
   AlienRegistrationNumber = 'ARNU',
   PassportNumber = 'CCPT',

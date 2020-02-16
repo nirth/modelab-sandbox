@@ -1,8 +1,13 @@
 import uuid from 'uuid'
 import { txFactory } from './utils'
-import { Scenario, TxType } from '../../sbdk/datamodel'
+import {
+  Scenario,
+  TxType,
+  TxFactory,
+  CreditTransferTx,
+} from '../../sbdk/datamodel'
 
-const createSalary = txFactory({
+const createSalary: TxFactory<CreditTransferTx> = txFactory({
   type: TxType.CreditTransfer,
   datetime: '2020-01-10T06:30:00.500Z',
   amount: '3500.00',

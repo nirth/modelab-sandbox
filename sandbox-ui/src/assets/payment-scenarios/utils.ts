@@ -1,10 +1,17 @@
-import { Scenario, Scenarios, Tx } from '../../sbdk/datamodel'
+import { Scenario, Scenarios, Tx, TxFactory } from '../../sbdk/datamodel'
 import uuid from 'uuid'
 
-export const txFactory = (payload: Tx) => (overrides: any): Tx => ({
-  ...payload,
+export const txFactory = (defaultValues: Tx): any => (overrides: any): any => ({
+  ...defaultValues,
   ...overrides,
 })
+
+const sortTxsByDate = (a: Tx, b: Tx) => {
+  const dateA = new Date(a.datetime)
+  const dateB = new Date(b.datetime)
+
+  return dateA.valueOf() - dateB.valueOf()
+}
 
 export const composeScenarios = (
   title: string,
@@ -17,12 +24,7 @@ export const composeScenarios = (
       (nextTxs: Tx[], scenario: Scenario) => nextTxs.concat(scenario.txs),
       []
     )
-    .sort((a: Tx, b: Tx) => {
-      const dateA = new Date(a.datetime)
-      const dateB = new Date(b.datetime)
-
-      return dateA.valueOf() - dateB.valueOf()
-    })
+    .sort(sortTxsByDate)
 
   return { id: uuid.v4(), slug, title, description, txs }
 }

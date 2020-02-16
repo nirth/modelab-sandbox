@@ -45,3 +45,5 @@ export type Scenario = {
 }
 
 export type Scenarios = Scenario[]
+
+export type TxFactory<TxType> = (overrides: any) => TxType
