@@ -2,4 +2,4 @@ export {
   createCreditTransferTx,
   createDirectDebitAnnouncementTx,
   createDirectDebitPaymentTx,
-} from './txs'
+} from './factories/txs'

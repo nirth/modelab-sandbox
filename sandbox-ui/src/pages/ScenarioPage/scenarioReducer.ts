@@ -1,8 +1,10 @@
 import { ActionType } from '../../datamodel/marketplace'
-import { emptyApp, sampleAppCode } from '../../apps/sample-app'
+import { emptyApp, sampleAppCode } from '../../sbdk/banking-apps/sample-app'
 import { ScenarioState } from './datamodel'
 import { TxType, Tx } from '../../sbdk/datamodel'
-import { evaluateApp } from '../../apps/evaluateApp'
+import { evaluateApp } from '../../sbdk/banking-apps/transpileApp'
+import { ScenarioPlayer } from '../../sbdk/ScenarioPlayer'
+import { createCurrentAccount } from '../../sbdk/factories/accounts'
 
 const computeBalance = (balance: number, tx: Tx): number => {
   if (tx.type === TxType.DirectDebitPayment) {
@@ -12,6 +14,11 @@ const computeBalance = (balance: number, tx: Tx): number => {
   }
   return balance
 }
+
+const scenarioPlayer = new ScenarioPlayer([
+  createCurrentAccount('UK Current Account', '343434', '0', 'GBP'),
+  createCurrentAccount('German Current Account', '121212', '0', 'EUR')
+]
 
 export const initialScenarioState: ScenarioState = {
   scenarioId: '',
