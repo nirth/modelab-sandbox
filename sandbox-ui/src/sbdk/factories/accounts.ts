@@ -1,9 +1,9 @@
 import { Account, AccountKind } from '../datamodel'
 
 const currencies = {
-  gbp: ['GBP', 'British Pound', '£'],
-  eur: ['EUR', 'Euro', '€'],
-  btc: ['BTC', 'Bitcoin', '₿'],
+  GBP: ['British Pound', '£'],
+  EUR: ['Euro', '€'],
+  BTC: ['Bitcoin', '₿'],
 }
 
 const resolveCurrency = (ccyCode: string) => currencies[ccyCode]
@@ -85,7 +85,7 @@ export const createAccount = (
   initialBalance: string,
   ccyCode: string
 ): Account => {
-  const [_, ccy, ccySymbol] = resolveCurrency(ccyCode)
+  const [ccy, ccySymbol] = resolveCurrency(ccyCode)
 
   return {
     name,

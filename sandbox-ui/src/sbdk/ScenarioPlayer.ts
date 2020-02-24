@@ -5,161 +5,11 @@ import {
   Tx,
   Outcome,
   OutcomeKind,
+  ScenarioDisplayState,
 } from './datamodel'
 import { transpileApp } from './banking-apps/transpileApp'
 import { CompiledApp } from '../datamodel/marketplace'
 import { isDefinedObject } from '../utils'
-
-/*
- case 'TxsLoaded':
-      const { txs, id } = payload
-      return { ...state, scenarioId: id, txsLoaded: true, txs }
-    case 'ResetScenario':
-      return {
-        ...state,
-        declinedTxIndicies: [],
-        balances: {
-          currentAccount: 0,
-          savingsAccount: 0,
-          securitiesAccount: 0,
-          bitcoinAccount: 0,
-        },
-        currentTxIndex: -1,
-        outcomes: [],
-      }
-    case 'NextTx':
-      const {
-        currentTxIndex,
-        appCode,
-        compiledApp: maybeCompiledApp,
-        outcomes,
-      } = state
-      const nextTxIndex = currentTxIndex + 1
-      const nextTx = state.txs[nextTxIndex]
-
-      if (nextTxIndex >= state.txs.length) {
-        return {
-          ...state,
-          outcomes: outcomes.concat({
-            type: ActionType.ScenarioFinished,
-            payload: {},
-          }),
-        }
-      }
-
-      const compiledApp =
-        maybeCompiledApp === emptyApp ? evaluateApp(appCode) : maybeCompiledApp
-
-      const [shouldContinueExecution, actions] = compiledApp(nextTx)
-
-      if (shouldContinueExecution) {
-        const nextBalance = computeBalance(
-          state.balances.currentAccount,
-          nextTx
-        )
-
-        return {
-          ...state,
-          balances: {
-            ...state.balances,
-            currentAccount: nextBalance,
-          },
-          currentTxIndex: nextTxIndex,
-          outcomes: outcomes.concat(actions),
-          compiledApp,
-        }
-      } else {
-        return {
-          ...state,
-          currentTxIndex: nextTxIndex,
-          declinedTxIndicies: state.declinedTxIndicies.concat([
-            nextTxIndex as any,
-          ]),
-          outcomes: outcomes.concat(actions).concat([
-            {
-              type: ActionType.Declined,
-              payload: {
-                heading: 'Payment Declined',
-                body: `Transaction of ${nextTx.amount} is declined`,
-              },
-            },
-          ]),
-          compiledApp,
-        }
-      }
-
-    case 'UpdateCode':
-      return {
-        ...state,
-        appCode: payload,
-        compiledApp: emptyApp,
-      }
-    default:
-      return state
-      */
-
-/**
- * case 'NextTx':
-      const {
-        currentTxIndex,
-        appCode,
-        compiledApp: maybeCompiledApp,
-        outcomes,
-      } = state
-      const nextTxIndex = currentTxIndex + 1
-      const nextTx = state.txs[nextTxIndex]
-
-      if (nextTxIndex >= state.txs.length) {
-        return {
-          ...state,
-          outcomes: outcomes.concat({
-            type: ActionType.ScenarioFinished,
-            payload: {},
-          }),
-        }
-      }
-
-      const compiledApp =
-        maybeCompiledApp === emptyApp ? evaluateApp(appCode) : maybeCompiledApp
-
-      const [shouldContinueExecution, actions] = compiledApp(nextTx)
-
-      if (shouldContinueExecution) {
-        const nextBalance = computeBalance(
-          state.balances.currentAccount,
-          nextTx
-        )
-
-        return {
-          ...state,
-          balances: {
-            ...state.balances,
-            currentAccount: nextBalance,
-          },
-          currentTxIndex: nextTxIndex,
-          outcomes: outcomes.concat(actions),
-          compiledApp,
-        }
-      } else {
-        return {
-          ...state,
-          currentTxIndex: nextTxIndex,
-          declinedTxIndicies: state.declinedTxIndicies.concat([
-            nextTxIndex as any,
-          ]),
-          outcomes: outcomes.concat(actions).concat([
-            {
-              type: ActionType.Declined,
-              payload: {
-                heading: 'Payment Declined',
-                body: `Transaction of ${nextTx.amount} is declined`,
-              },
-            },
-          ]),
-          compiledApp,
-        }
-      }
- */
 
 const resolveAccountsMap = (accounts: Account[]): Accounts =>
   accounts.reduce((accountsMap: Accounts, account: Account) => {
@@ -178,7 +28,7 @@ export class ScenarioPlayer {
   _currentTxIndex: number
 
   constructor(initialCustomerAccounts: Account[]) {
-    this._initialCustomerAccounts = { ...initialCustomerAccounts }
+    this._initialCustomerAccounts = initialCustomerAccounts.concat()
     this._customerAccounts = resolveAccountsMap(initialCustomerAccounts)
     this._currentTxIndex = -1
     this._txs = []
@@ -190,18 +40,58 @@ export class ScenarioPlayer {
     return { ...this._customerAccounts }
   }
 
-  get readyToPlay(): boolean {
+  get scenarioLoaded(): boolean {
     return (
-      typeof this._bankingApp === 'function' &&
       isDefinedObject(this._customerAccounts) &&
       isDefinedObject(this._scenario)
     )
   }
 
-  initializeScenario(scenario: any) {
+  get readyToPlay(): boolean {
+    return (
+      this.scenarioLoaded && 
+      typeof this._bankingApp === 'function'
+    )
+  }
+
+  get displayState(): ScenarioDisplayState {
+    if (typeof this._scenario === 'object' && this._scenario !== null) {
+      return {
+        scenarioLoaded: this.scenarioLoaded,
+        readyToPlay: this.readyToPlay,
+        scenarioId: this._scenario.id,
+        txIndex: this._currentTxIndex,
+        txs: this._txs,
+        declinedTxs: [],
+        executedTxs: [],
+        createdTxs: [],
+      }
+    } else {
+      return {
+        scenarioLoaded: this.scenarioLoaded,
+        readyToPlay: this.readyToPlay,
+        scenarioId: '',
+        txIndex: -1,
+        txs: [],
+        declinedTxs: [],
+        executedTxs: [],
+        createdTxs: [],
+      }
+    }
+    
+  }
+
+  loadScenario(scenario: Scenario) {
+    this.unloadScenario()
     this._scenario = scenario
     this._txs = scenario.txs.concat([])
-    this.reset()
+    this._currentTxIndex = -1
+  }
+
+  unloadScenario() {
+    this._scenario = undefined
+    this._txs = []
+    this._currentTxIndex = -1
   }
 
   initializeBankingApp(bankingAppSourceCode: string) {
@@ -226,6 +116,8 @@ export class ScenarioPlayer {
       }
 
       const [shouldContinueExecution, actions] = app(nextTx)
+
+      console.log('actions:', actions)
 
       if (shouldContinueExecution) {
       } else {
@@ -254,7 +146,5 @@ export class ScenarioPlayer {
   }
 
   reset() {
-    this._currentTxIndex = -1
-    this._customerAccounts = resolveAccountsMap(this._initialCustomerAccounts)
   }
 }

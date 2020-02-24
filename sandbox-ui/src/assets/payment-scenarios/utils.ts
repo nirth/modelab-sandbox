@@ -1,4 +1,4 @@
-import { Scenario, Scenarios, Tx, TxFactory } from '../../sbdk/datamodel'
+import { Scenario, Scenarios, Tx } from '../../sbdk/datamodel'
 import uuid from 'uuid'
 
 export const txFactory = (defaultValues: Tx): any => (overrides: any): any => ({

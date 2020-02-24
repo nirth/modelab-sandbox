@@ -6,7 +6,7 @@ import { Container, Grid } from 'semantic-ui-react'
 import { ScenarioStatus } from './ScenarioStatus'
 import { TxList } from './TxList'
 import { Outcomes } from './Outcomes'
-import { scenarioReducer, initialScenarioState } from './scenarioReducer'
+import { scenarioPageReducer, initialScenarioPageState } from './scenario-page-reducer'
 import { AppEditor } from './AppEditor'
 import { LoadingState } from '../../components/LoadingDisplay'
 import { ErrorState } from '../../components/ErrorDisplay'
@@ -53,7 +53,7 @@ const containerStyles = {
 
 const ScenarioPage = () => {
   const { scenarioSlug } = useParams()
-  const [state, dispatch] = useReducer(scenarioReducer, initialScenarioState)
+  const [state, dispatch] = useReducer(scenarioPageReducer, initialScenarioPageState)
   const { loading, error, data }: any = useQuery(findScenarioQuery, {
     variables: { slug: scenarioSlug },
   })
@@ -88,33 +88,22 @@ const ScenarioPage = () => {
 
   if (
     state.scenarioId !== data.scenario.id ||
-    (state.txsLoaded === false && data?.scenario?.txs?.length > 0)
+    (state.scenarioLoaded === false && data?.scenario?.txs?.length > 0)
   ) {
-    dispatch({ type: 'TxsLoaded', payload: data.scenario })
+    dispatch({ type: 'ScenarioSelected', payload: data.scenario })
   } else {
     console.log('Scenario Changed!')
   }
 
   if (state.txs?.length > 0) {
-    const {
-      appCode,
-      txs,
-      currentTxIndex,
-      declinedTxIndicies,
-      balances: {
-        currentAccount,
-        savingsAccount,
-        securitiesAccount,
-        bitcoinAccount,
-      },
-      outcomes,
-    } = state
+    const {txIndex, txs, declinedTxs, executedTxs, createdTxs} = state
+    
 
     return (
       <Container style={containerStyles}>
         <Grid columns={3}>
           <Grid.Column>
-            <ScenarioStatus
+            {/* <ScenarioStatus
               currentAccount={currentAccount}
               savingsAccount={savingsAccount}
               securitiesAccount={securitiesAccount}
@@ -123,11 +112,11 @@ const ScenarioPage = () => {
               onPlay={() => dispatch({ type: 'PlayScenario', payload: {} })}
               onReset={() => dispatch({ type: 'ResetScenario', payload: {} })}
               onNext={() => dispatch({ type: 'NextTx', payload: {} })}
-            />
+            /> */}
             <TxList
               txs={txs}
-              currentTxIndex={currentTxIndex}
-              declinedTxIndicies={declinedTxIndicies}
+              currentTxIndex={txIndex}
+              declinedTxIndicies={[/*declinedTxIndicies*/]}
             />
           </Grid.Column>
           <Grid.Column>
@@ -135,11 +124,11 @@ const ScenarioPage = () => {
               onChange={(code: string) => {
                 dispatch({ type: 'UpdateCode', payload: code })
               }}
-              appCode={appCode}
+              appCode={''}
             />
           </Grid.Column>
           <Grid.Column>
-            <Outcomes outcomes={outcomes} />
+            <Outcomes outcomes={[/*outcomes*/]} />
           </Grid.Column>
         </Grid>
       </Container>

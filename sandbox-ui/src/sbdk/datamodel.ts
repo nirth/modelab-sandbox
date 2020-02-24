@@ -46,6 +46,17 @@ export type Scenario = {
 
 export type Scenarios = Scenario[]
 
+export type ScenarioDisplayState = {
+  scenarioLoaded: boolean
+  readyToPlay: boolean
+  scenarioId: string
+  txIndex: number,
+  txs: Tx[]
+  declinedTxs: Tx[]
+  executedTxs: Tx[]
+  createdTxs: Tx[]
+}
+
 export type TxFactory<TxType> = (overrides: any) => TxType
 
 export enum AccountKind {
