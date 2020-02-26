@@ -1,5 +1,6 @@
 import { Scenario, Scenarios, Tx } from '../../sbdk/datamodel'
 import { createTxId } from '../../sbdk/factories/txs'
+import { sortTxsByDate } from '../../utils'
 
 export const txFactory = (defaultValues: any): any => (overrides: any): any => {
   const tx: Tx = {
@@ -17,13 +18,6 @@ export const txFactory = (defaultValues: any): any => (overrides: any): any => {
   )
 
   return tx
-}
-
-const sortTxsByDate = (a: Tx, b: Tx) => {
-  const dateA = new Date(a.datetime)
-  const dateB = new Date(b.datetime)
-
-  return dateA.valueOf() - dateB.valueOf()
 }
 
 export const composeScenarios = (

@@ -72,6 +72,7 @@ const ScenarioPage = () => {
         <Grid columns={3}>
           <Grid.Column>
             <ScenarioStatus
+              scenarioFinished={true}
               onPause={() => dispatch({ type: 'PauseScenario', payload: {} })}
               onPlay={() => dispatch({ type: 'PlayScenario', payload: {} })}
               onReset={() => dispatch({ type: 'ResetScenario', payload: {} })}
@@ -101,9 +102,11 @@ const ScenarioPage = () => {
 
   if (state.txs?.length > 0) {
     const {
+      scenarioFinished,
       accounts,
       txIndex,
       txs,
+      settledTxs,
       declinedTxs,
       bankingAppSourceCode,
       outcomes,
@@ -114,6 +117,7 @@ const ScenarioPage = () => {
         <Grid columns={3}>
           <Grid.Column>
             <ScenarioStatus
+              scenarioFinished={scenarioFinished}
               onPause={() => dispatch({ type: 'PauseScenario', payload: {} })}
               onPlay={() => dispatch({ type: 'PlayScenario', payload: {} })}
               onReset={() => dispatch({ type: 'ResetScenario', payload: {} })}
@@ -122,6 +126,7 @@ const ScenarioPage = () => {
             <TxList
               txs={txs}
               currentTxIndex={txIndex}
+              settledTxFks={settledTxs.map((tx) => tx.id)}
               declinedTxFks={declinedTxs.map((tx) => tx.id)}
             />
           </Grid.Column>

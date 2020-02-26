@@ -1,4 +1,4 @@
-import { Account, AccountKind } from '../datamodel'
+import { Account, AccountKind, AccountPurpose } from '../datamodel'
 
 const currencies = {
   GBP: ['British Pound', '£'],
@@ -10,6 +10,7 @@ const resolveCurrency = (ccyCode: string) => currencies[ccyCode]
 
 export const createCashAccount = (
   name: string,
+  accountPurpose: AccountPurpose, 
   accountNumber: string,
   initialBalance: string,
   ccyCode: string
@@ -17,6 +18,7 @@ export const createCashAccount = (
   createAccount(
     AccountKind.CashAccount,
     name,
+    accountPurpose, 
     accountNumber,
     initialBalance,
     ccyCode
@@ -24,6 +26,7 @@ export const createCashAccount = (
 
 export const createSecuritiesAccount = (
   name: string,
+  accountPurpose: AccountPurpose, 
   accountNumber: string,
   initialBalance: string,
   ccyCode: string
@@ -31,6 +34,7 @@ export const createSecuritiesAccount = (
   createAccount(
     AccountKind.SecuritiesAccount,
     name,
+    accountPurpose, 
     accountNumber,
     initialBalance,
     ccyCode
@@ -38,6 +42,7 @@ export const createSecuritiesAccount = (
 
 export const createBitcoinWallet = (
   name: string,
+  accountPurpose: AccountPurpose, 
   walletAddress: string,
   initialBalance: string,
   ccyCode: string
@@ -45,6 +50,7 @@ export const createBitcoinWallet = (
   createAccount(
     AccountKind.BtcWallet,
     name,
+    accountPurpose, 
     walletAddress,
     initialBalance,
     ccyCode
@@ -53,6 +59,7 @@ export const createBitcoinWallet = (
 export const createAccount = (
   kind: AccountKind,
   name: string,
+  accountPurpose: AccountPurpose,
   paymentInstrument: string,
   initialBalance: string,
   ccyCode: string
@@ -62,6 +69,7 @@ export const createAccount = (
   return {
     name,
     kind,
+    accountPurpose,
     paymentInstrument,
     ccy,
     ccyCode,

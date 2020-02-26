@@ -9,7 +9,7 @@ import {
   ScenarioDisplayState,
 } from './datamodel'
 import { transpileApp } from './banking-apps/transpileApp'
-import { isDefinedObject } from '../utils'
+import { isDefinedObject, sortTxsByDate } from '../utils'
 import { CompiledApp, Action } from './banking-apps/datamodel'
 import { actionToOutcome } from './factories/outcomes'
 
@@ -17,6 +17,7 @@ const resolveAccountsMap = (accounts: Account[]): Accounts =>
   accounts.reduce((accountsMap: Accounts, account: Account) => {
     return {
       ...accountsMap,
+      
       [account.paymentInstrument]: account,
     }
   }, {})
@@ -25,8 +26,9 @@ export class ScenarioPlayer {
   _accounts: Accounts
   _scenario?: Scenario
   _txs: Tx[]
-  _executedTxs: Tx[]
+  _settledTxs: Tx[]
   _declinedTxs: Tx[]
+  _createdTxs: Tx[]
   _outcomes: Outcome[]
   _initialCustomerAccounts: any
   _bankingApp?: CompiledApp
@@ -39,8 +41,9 @@ export class ScenarioPlayer {
     this._accounts = resolveAccountsMap(initialCustomerAccounts)
     this._currentTxIndex = -1
     this._txs = []
-    this._executedTxs = []
+    this._settledTxs = []
     this._declinedTxs = []
+    this._createdTxs = []
     this._outcomes = []
     this._bankingAppSourceCode = ''
     this._shouldRecompileBankingApp = false
@@ -71,36 +74,44 @@ export class ScenarioPlayer {
     return this.scenarioLoaded && typeof this._bankingApp === 'function'
   }
 
-  get isFinished() {
-    return this._currentTxIndex + 1 === this._txs.length - 1
+  get scenarioFinished() {
+    return this._currentTxIndex === this._txs.length - 1
   }
 
   get displayState(): ScenarioDisplayState {
     if (typeof this._scenario === 'object' && this._scenario !== null) {
+      const allTxs: Tx[] = this._txs
+        .concat(this._settledTxs)
+        .concat(this._declinedTxs)
+        .concat(this._createdTxs)
+        .sort(sortTxsByDate)
+
       return {
-        accounts: Object.values(this._accounts),
         scenarioLoaded: this.scenarioLoaded,
         readyToPlay: this.readyToPlay,
+        scenarioFinished: this.scenarioFinished,
+        accounts: Object.values(this._accounts),
         bankingAppSourceCode: this.bankingAppSourceCode,
         scenarioId: this._scenario.id,
         txIndex: this._currentTxIndex,
-        txs: this._txs,
-        executedTxs: this._executedTxs,
+        txs: allTxs,
+        settledTxs: this._settledTxs,
         declinedTxs: this._declinedTxs,
         createdTxs: [],
         outcomes: this._outcomes,
       }
     } else {
       return {
-        accounts: [],
         scenarioLoaded: this.scenarioLoaded,
         readyToPlay: this.readyToPlay,
+        scenarioFinished: this.scenarioFinished,
+        accounts: [],
         bankingAppSourceCode: this.bankingAppSourceCode,
         scenarioId: '',
         txIndex: -1,
         txs: [],
         declinedTxs: [],
-        executedTxs: [],
+        settledTxs: [],
         createdTxs: [],
         outcomes: [],
       }
@@ -131,22 +142,26 @@ export class ScenarioPlayer {
       this.updateBankingApp()
     }
 
-    if (this.readyToPlay) {
+    if (this._txs.length > 0 && this.readyToPlay) {
       if (!(typeof this._scenario === 'object' && this._scenario !== null)) {
         throw new Error('ScenarioPlayer.play: Scenario is not defined')
       }
 
       const app = this._bankingApp
-      const currentTxIndex = this._currentTxIndex
-      const nextTxIndex = currentTxIndex + 1
-      const tx: Tx = this._txs[nextTxIndex]
+
+      const tx: Tx | undefined = this._txs.shift()
 
       if (typeof app !== 'function') {
         throw new Error('ScenarioPlayer.play: App is not defined')
       }
 
+      if (tx === undefined) {
+        throw new Error('ScenarioPlayer.play: Tx is not defined')
+      }
+
       const [shouldContinueExecution, actions] = app(tx)
-      actions.map((action: Action) => {
+
+      actions.forEach((action: Action) => {
         const maybeOutcome = actionToOutcome(action)
         if (maybeOutcome !== undefined) {
           outcomes.push(maybeOutcome)
@@ -161,7 +176,7 @@ export class ScenarioPlayer {
           payload: {},
         })
         this.executeAndSettlePayment(tx)
-        this._executedTxs.push(tx)
+        this._settledTxs.push(tx)
       } else {
         outcomes.push({
           kind: OutcomeKind.Declined,
@@ -172,7 +187,10 @@ export class ScenarioPlayer {
         this._declinedTxs.push(tx)
       }
 
-      if (this.isFinished) {
+      const scenarioWillBeFinished = this._txs.length === 0
+      console.log('ScenarioPlayer.play', scenarioWillBeFinished)
+
+      if (scenarioWillBeFinished) {
         outcomes.push({
           kind: OutcomeKind.ScenarioFinished,
           heading: 'All Done!',
@@ -182,8 +200,6 @@ export class ScenarioPlayer {
             /* Or deltas per account */
           },
         })
-      } else {
-        this._currentTxIndex = nextTxIndex
       }
     }
 
@@ -226,8 +242,9 @@ export class ScenarioPlayer {
     this._accounts = resolveAccountsMap(this._initialCustomerAccounts)
     this._currentTxIndex = -1
     this._txs = []
-    this._executedTxs = []
+    this._settledTxs = []
     this._declinedTxs = []
+    this._createdTxs = []
     this._outcomes = []
     this._bankingAppSourceCode = ''
     this._shouldRecompileBankingApp = false

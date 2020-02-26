@@ -2,6 +2,7 @@ import React from 'react'
 import { Segment, Icon, Button, Header } from 'semantic-ui-react'
 
 type ScenarioControlsProps = {
+  scenarioFinished: boolean
   onPlay: () => void
   onPause: () => void
   onReset: () => void
@@ -9,7 +10,7 @@ type ScenarioControlsProps = {
 }
 
 export const ScenarioStatus = (props: ScenarioControlsProps) => {
-  const { onReset, onNext } = props
+  const { onReset, onNext, scenarioFinished } = props
 
   return (
     <Segment>
@@ -22,7 +23,7 @@ export const ScenarioStatus = (props: ScenarioControlsProps) => {
         <Icon name="repeat" />
         Reset
       </Button>
-      <Button icon labelPosition="right" onClick={onNext}>
+      <Button icon labelPosition="right" onClick={onNext} disabled={scenarioFinished}>
         Next
         <Icon name="angle right" />
       </Button>

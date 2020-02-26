@@ -48,15 +48,16 @@ export type Scenario = {
 export type Scenarios = Scenario[]
 
 export type ScenarioDisplayState = {
-  accounts: Account[]
   scenarioLoaded: boolean
   readyToPlay: boolean
+  scenarioFinished: boolean
+  accounts: Account[]
   bankingAppSourceCode: string
   scenarioId: string
   txIndex: number
   txs: Tx[]
   declinedTxs: Tx[]
-  executedTxs: Tx[]
+  settledTxs: Tx[]
   createdTxs: Tx[]
   outcomes: Outcome[]
 }
@@ -67,6 +68,14 @@ export enum AccountKind {
   CashAccount = 'CASH_ACCOUNT',
   SecuritiesAccount = 'SECURITIES_ACCOUNT',
   BtcWallet = 'BTC_WALLET',
+}
+
+export enum AccountPurpose {
+  Current = 'CURRENT',
+  Savings = 'SAVINGS',
+  LowRiskInvestment = 'LOW_RISK_INVESTMENT',
+  MediumRiskInvestment = 'MEDIUM_RISK_INVESTMENT',
+  HighRiskInvestment = 'HIGH_RISK_INVESTMENT',
 }
 
 export type Account = {

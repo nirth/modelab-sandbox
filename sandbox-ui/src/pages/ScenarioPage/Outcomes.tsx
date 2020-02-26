@@ -29,7 +29,7 @@ export const Outcomes = (props: OutcomeProps) => {
       <Header as="h2" content="Accounts" />
       {accounts.map((account: Account) => (
         <Header
-          key={`${account.ccy}+${account.kind}`}
+          key={`${account.ccyCode}${account.paymentInstrument}`}
           content={account.name}
           subheader={`${account.ccySymbol}${account.balance}`}
         />

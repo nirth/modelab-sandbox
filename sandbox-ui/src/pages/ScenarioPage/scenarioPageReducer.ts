@@ -5,26 +5,28 @@ import {
   createSecuritiesAccount,
   createBitcoinWallet,
 } from '../../sbdk/factories/accounts'
-import { ScenarioDisplayState } from '../../sbdk/datamodel'
+import { ScenarioDisplayState, AccountPurpose } from '../../sbdk/datamodel'
 import { notifyOnLargeDirectDebit } from '../../sbdk/banking-apps'
 
 const scenarioPlayer = new ScenarioPlayer([
-  createCashAccount('UK Current Account', '1100001', '0', 'GBP'),
-  createSecuritiesAccount('ISA', '1200001', '0', 'GBP'),
-  createBitcoinWallet('Bitcoin Wallet', '123xyz', '0', 'BTC'),
+  createCashAccount('Current Account',AccountPurpose.Current, '1100001', '0', 'GBP'),
+  createCashAccount('Savings Account', AccountPurpose.Savings, '1100002', '0', 'GBP'),
+  createSecuritiesAccount('ISA', AccountPurpose.MediumRiskInvestment, '1200001', '0', 'GBP'),
+  createBitcoinWallet('Bitcoin Wallet', AccountPurpose.HighRiskInvestment, '123xyz', '0', 'BTC'),
 ])
 scenarioPlayer.bankingAppSourceCode = notifyOnLargeDirectDebit
 
 export const initialScenarioPageState: ScenarioDisplayState = {
-  accounts: [],
   scenarioLoaded: false,
   readyToPlay: false,
+  scenarioFinished: false,
+  accounts: [],
   bankingAppSourceCode: notifyOnLargeDirectDebit,
   scenarioId: '',
   txIndex: -1,
   txs: [],
   declinedTxs: [],
-  executedTxs: [],
+  settledTxs: [],
   createdTxs: [],
   outcomes: [],
 }

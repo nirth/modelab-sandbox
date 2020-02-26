@@ -8,11 +8,12 @@ import { TxDisplayMetadata } from './datamodel'
 type TxListProps = {
   currentTxIndex: number
   txs: Tx[]
+  settledTxFks: string[]
   declinedTxFks: string[]
 }
 
 export const TxList = (props: TxListProps) => {
-  const { currentTxIndex, txs, declinedTxFks } = props
+  const { currentTxIndex, txs, settledTxFks, declinedTxFks } = props
 
   useEffect(() => {
     // TODO: I should use `useRef`, but it gave me too much headache.
@@ -38,7 +39,7 @@ export const TxList = (props: TxListProps) => {
       }}
     >
       {txs
-        .map(addTxMetadata(currentTxIndex, declinedTxFks))
+        .map(addTxMetadata(currentTxIndex, settledTxFks, declinedTxFks))
         .map((metadata: TxDisplayMetadata) => {
           const {
             isCurrent,

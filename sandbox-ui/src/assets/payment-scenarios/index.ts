@@ -10,13 +10,13 @@ import { coupleOfLargeDds } from './couple-of-large-dds'
 
 export const scenarios: Scenarios = [
   // coupleOfLargeDds,
-  // stableSalary,
-  composeScenarios(
-    'Stable Salary and Utilities',
-    'stable-salary-and-utilities',
-    'Alice has a good job, and pays her bills!',
-    [stableSalary, utilityBills, coupleOfLargeDds]
-  ),
+  stableSalary,
+  // composeScenarios(
+  //   'Stable Salary and Utilities',
+  //   'stable-salary-and-utilities',
+  //   'Alice has a good job, and pays her bills!',
+  //   [stableSalary, utilityBills, coupleOfLargeDds]
+  // ),
   // composeScenarios(
   //   'Stable Salary and Occasional Coffee',
   //   'stable-salary-and-occasional-coffee',
