@@ -8,56 +8,28 @@ const currencies = {
 
 const resolveCurrency = (ccyCode: string) => currencies[ccyCode]
 
-export const createCurrentAccount = (
+export const createCashAccount = (
   name: string,
   accountNumber: string,
   initialBalance: string,
   ccyCode: string
 ): Account =>
   createAccount(
-    AccountKind.CurrentAccount,
+    AccountKind.CashAccount,
     name,
     accountNumber,
     initialBalance,
     ccyCode
   )
 
-export const createSavingsAccount = (
+export const createSecuritiesAccount = (
   name: string,
   accountNumber: string,
   initialBalance: string,
   ccyCode: string
 ): Account =>
   createAccount(
-    AccountKind.SavingsAccount,
-    name,
-    accountNumber,
-    initialBalance,
-    ccyCode
-  )
-
-export const createIsaAccount = (
-  name: string,
-  accountNumber: string,
-  initialBalance: string,
-  ccyCode: string
-): Account =>
-  createAccount(
-    AccountKind.IsaAccount,
-    name,
-    accountNumber,
-    initialBalance,
-    ccyCode
-  )
-
-export const createLifeIsaAccount = (
-  name: string,
-  accountNumber: string,
-  initialBalance: string,
-  ccyCode: string
-): Account =>
-  createAccount(
-    AccountKind.LifeIsaAccount,
+    AccountKind.SecuritiesAccount,
     name,
     accountNumber,
     initialBalance,
@@ -71,7 +43,7 @@ export const createBitcoinWallet = (
   ccyCode: string
 ): Account =>
   createAccount(
-    AccountKind.LifeIsaAccount,
+    AccountKind.BtcWallet,
     name,
     walletAddress,
     initialBalance,

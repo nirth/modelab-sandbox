@@ -16,7 +16,7 @@ const createSalary: TxFactory<CreditTransferTx> = txFactory({
   sender: 'BankyBank',
   receiver: 'Mode',
   creditorCustomer: 'Alice',
-  creditorBankAccount: '343434',
+  creditorBankAccount: '1100001',
 })
 
 export const stableSalary: Scenario = {

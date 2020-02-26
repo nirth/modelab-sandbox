@@ -10,6 +10,7 @@ const ScenariosTypes = gql`
   }
 
   type DirectDebitPaymentTx {
+    id: String
     type: TxType
     datetime: String
     amount: String
@@ -22,6 +23,7 @@ const ScenariosTypes = gql`
   }
 
   type DirectDebitAnnouncementTx {
+    id: String
     type: TxType
     datetime: String
     amount: String
@@ -34,6 +36,7 @@ const ScenariosTypes = gql`
   }
 
   type CreditTransferTx {
+    id: String
     type: TxType
     datetime: String
     amount: String

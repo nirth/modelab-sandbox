@@ -11,7 +11,7 @@ const directDebitAnnouncement = txFactory({
   sender: 'Banky Bank',
   receiver: 'Mode',
   debitorCustomer: 'Alice',
-  debitorBankAccount: '343434',
+  debitorBankAccount: '1100001',
 })
 
 const directDebitPayment = txFactory({

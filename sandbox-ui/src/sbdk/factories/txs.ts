@@ -4,6 +4,25 @@ import {
   TxType,
   CreditTransferTx,
 } from '../datamodel'
+import { fromString as uuidFromString } from 'uuidv4'
+
+export const createTxId = (
+  type: TxType,
+  datetime: string,
+  creditorBankAccount: string,
+  debitorBankAccount: string,
+  amount: string
+): string => {
+  console.log(
+    `createTxId(${type}, ${datetime}, ${creditorBankAccount}, ${debitorBankAccount}, ${amount}`,
+    uuidFromString(
+      type + datetime + creditorBankAccount + debitorBankAccount + amount
+    )
+  )
+  return uuidFromString(
+    type + datetime + creditorBankAccount + debitorBankAccount + amount
+  )
+}
 
 const createTx = (
   type: TxType,
@@ -16,6 +35,13 @@ const createTx = (
   debitorCustomer: string,
   debitorBankAccount: string
 ): any => ({
+  id: createTxId(
+    type,
+    datetime,
+    creditorBankAccount,
+    debitorBankAccount,
+    amount
+  ),
   type,
   datetime,
   amount,

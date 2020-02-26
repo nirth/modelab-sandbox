@@ -2,10 +2,6 @@ import React from 'react'
 import { Segment, Icon, Button, Header } from 'semantic-ui-react'
 
 type ScenarioControlsProps = {
-  currentAccount: number
-  savingsAccount: number
-  securitiesAccount: number
-  bitcoinAccount: number
   onPlay: () => void
   onPause: () => void
   onReset: () => void
@@ -13,15 +9,11 @@ type ScenarioControlsProps = {
 }
 
 export const ScenarioStatus = (props: ScenarioControlsProps) => {
-  const { currentAccount, onReset, onNext } = props
+  const { onReset, onNext } = props
 
   return (
     <Segment>
-      <Header
-        as="h2"
-        content="Alice’s Bank Account"
-        subheader={`Balance is £${currentAccount.toFixed(2)}`}
-      />
+      <Header as="h2" content="Alice’s World" />
       {/* <Button icon labelPosition="left">
         <Icon name="pause" />
         Pause

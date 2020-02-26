@@ -1,6 +1,6 @@
 import { Tx, TxType } from '../datamodel'
 import { safeStringify } from '../../utils'
-import { CompiledApp, Action } from '../../datamodel/marketplace'
+import { CompiledApp, Action } from './datamodel'
 import { createMarketApi } from './createMarketApi'
 
 /* eslint-disable no-new-func */

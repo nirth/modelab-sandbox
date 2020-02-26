@@ -6,7 +6,10 @@ import { Container, Grid } from 'semantic-ui-react'
 import { ScenarioStatus } from './ScenarioStatus'
 import { TxList } from './TxList'
 import { Outcomes } from './Outcomes'
-import { scenarioPageReducer, initialScenarioPageState } from './scenario-page-reducer'
+import {
+  scenarioPageReducer,
+  initialScenarioPageState,
+} from './scenarioPageReducer'
 import { AppEditor } from './AppEditor'
 import { LoadingState } from '../../components/LoadingDisplay'
 import { ErrorState } from '../../components/ErrorDisplay'
@@ -16,6 +19,7 @@ const findScenarioQuery = gql`
     scenario(slug: $slug) @client {
       id
       txs {
+        id
         type
         datetime
         amount
@@ -53,7 +57,10 @@ const containerStyles = {
 
 const ScenarioPage = () => {
   const { scenarioSlug } = useParams()
-  const [state, dispatch] = useReducer(scenarioPageReducer, initialScenarioPageState)
+  const [state, dispatch] = useReducer(
+    scenarioPageReducer,
+    initialScenarioPageState
+  )
   const { loading, error, data }: any = useQuery(findScenarioQuery, {
     variables: { slug: scenarioSlug },
   })
@@ -65,10 +72,6 @@ const ScenarioPage = () => {
         <Grid columns={3}>
           <Grid.Column>
             <ScenarioStatus
-              currentAccount={0}
-              savingsAccount={0}
-              securitiesAccount={0}
-              bitcoinAccount={0}
               onPause={() => dispatch({ type: 'PauseScenario', payload: {} })}
               onPlay={() => dispatch({ type: 'PlayScenario', payload: {} })}
               onReset={() => dispatch({ type: 'ResetScenario', payload: {} })}
@@ -91,44 +94,50 @@ const ScenarioPage = () => {
     (state.scenarioLoaded === false && data?.scenario?.txs?.length > 0)
   ) {
     dispatch({ type: 'ScenarioSelected', payload: data.scenario })
+    return <LoadingState />
   } else {
     console.log('Scenario Changed!')
   }
 
   if (state.txs?.length > 0) {
-    const {txIndex, txs, declinedTxs, executedTxs, createdTxs} = state
-    
+    const {
+      accounts,
+      txIndex,
+      txs,
+      declinedTxs,
+      bankingAppSourceCode,
+      outcomes,
+    } = state
 
     return (
       <Container style={containerStyles}>
         <Grid columns={3}>
           <Grid.Column>
-            {/* <ScenarioStatus
-              currentAccount={currentAccount}
-              savingsAccount={savingsAccount}
-              securitiesAccount={securitiesAccount}
-              bitcoinAccount={bitcoinAccount}
+            <ScenarioStatus
               onPause={() => dispatch({ type: 'PauseScenario', payload: {} })}
               onPlay={() => dispatch({ type: 'PlayScenario', payload: {} })}
               onReset={() => dispatch({ type: 'ResetScenario', payload: {} })}
-              onNext={() => dispatch({ type: 'NextTx', payload: {} })}
-            /> */}
+              onNext={() => dispatch({ type: 'PlayNextTx', payload: {} })}
+            />
             <TxList
               txs={txs}
               currentTxIndex={txIndex}
-              declinedTxIndicies={[/*declinedTxIndicies*/]}
+              declinedTxFks={declinedTxs.map((tx) => tx.id)}
             />
           </Grid.Column>
           <Grid.Column>
             <AppEditor
-              onChange={(code: string) => {
-                dispatch({ type: 'UpdateCode', payload: code })
+              onChange={(sourceCode: string) => {
+                dispatch({
+                  type: 'BankingAppSourceCodeUpdated',
+                  payload: { sourceCode },
+                })
               }}
-              appCode={''}
+              appSourceCode={bankingAppSourceCode}
             />
           </Grid.Column>
           <Grid.Column>
-            <Outcomes outcomes={[/*outcomes*/]} />
+            <Outcomes accounts={accounts} outcomes={outcomes} />
           </Grid.Column>
         </Grid>
       </Container>

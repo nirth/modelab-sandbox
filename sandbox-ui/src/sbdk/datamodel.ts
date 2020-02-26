@@ -13,6 +13,7 @@ export enum TxType {
 }
 
 export type Tx = {
+  id: string
   type: TxType
   datetime: string
   amount: string
@@ -47,29 +48,31 @@ export type Scenario = {
 export type Scenarios = Scenario[]
 
 export type ScenarioDisplayState = {
+  accounts: Account[]
   scenarioLoaded: boolean
   readyToPlay: boolean
+  bankingAppSourceCode: string
   scenarioId: string
-  txIndex: number,
+  txIndex: number
   txs: Tx[]
   declinedTxs: Tx[]
   executedTxs: Tx[]
   createdTxs: Tx[]
+  outcomes: Outcome[]
 }
 
 export type TxFactory<TxType> = (overrides: any) => TxType
 
 export enum AccountKind {
-  CurrentAccount = 'CURRENT_ACCOUNT',
-  SavingsAccount = 'SAVINGS_ACCOUNT',
-  IsaAccount = 'ISA_ACCOUNT',
-  LifeIsaAccount = 'LIFE_ISA_ACCOUNT',
-  BitcoinWallet = 'BITCOIN_WALLET',
+  CashAccount = 'CASH_ACCOUNT',
+  SecuritiesAccount = 'SECURITIES_ACCOUNT',
+  BtcWallet = 'BTC_WALLET',
 }
 
 export type Account = {
   kind: AccountKind
   name: string
+  accountPurpose: string
   paymentInstrument: string
   ccy: string
   ccyCode: string
@@ -82,13 +85,16 @@ export type Accounts = {
 }
 
 export enum OutcomeKind {
-  Finished = 'FINISHED',
-  Executed = 'Executed',
+  Notification = 'NOTIFICATION',
+  CreateInternalTransfer = 'CREATE_INTERNAL_TRANSFER',
+  Executed = 'EXECUTED',
   Declined = 'DECLINED',
+  ScenarioFinished = 'SCENARIO_FINISHED',
 }
 
 export type Outcome = {
   kind: OutcomeKind
   heading: string
-  payload?: object
+  body: string
+  payload: object
 }

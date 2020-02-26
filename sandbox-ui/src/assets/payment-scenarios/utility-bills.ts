@@ -19,7 +19,7 @@ const directDebitAnnouncement: TxFactory<DirectDebitAnnouncementTx> = txFactory(
     sender: 'Banky Bank',
     receiver: 'Mode',
     debitorCustomer: 'Alice',
-    debitorBankAccount: '343434',
+    debitorBankAccount: '1100001',
   }
 )
 
@@ -32,7 +32,7 @@ const directDebitPayment: TxFactory<DirectDebitPaymentTx> = txFactory({
   sender: 'Banky Bank',
   receiver: 'Mode',
   debitorCustomer: 'Alice',
-  debitorBankAccount: '343434',
+  debitorBankAccount: '1100001',
 })
 
 export const utilityBills: Scenario = {

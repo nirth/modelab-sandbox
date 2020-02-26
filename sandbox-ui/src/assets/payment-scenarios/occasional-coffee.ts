@@ -8,7 +8,7 @@ const payForCoffee = txFactory({
   datetime: '2020-01-10T06:30:00.500Z',
   amount: '-2.80',
   debitorCustomer: 'Alice',
-  debitorBankAccount: '343434',
+  debitorBankAccount: '1100001',
   sender: 'Mode',
   receiver: 'Banky Bank',
   creditorCustomer: 'Boozy Coffees',

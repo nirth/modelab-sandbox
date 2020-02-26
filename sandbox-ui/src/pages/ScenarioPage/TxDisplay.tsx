@@ -17,7 +17,7 @@ const Payment = (props: CreditTransferTx) => {
   const { amount, datetime } = props
   const isIncoming = parseFloat(amount) >= 0
   const color = isIncoming ? 'green' : 'red'
-  const icon = isIncoming ? 'angle up' : 'angle down'
+  const icon = isIncoming ? 'arrow up' : 'arrow down'
   const prettyDate = toPrettyDate(datetime)
 
   return (
@@ -56,7 +56,7 @@ const DirectDebitPayment = (props: DirectDebitPaymentTx) => {
     <>
       <Header content="Direct Debit Payment" subheader={prettyDate} />
       <Label color="red" style={{ minWidth: '160px' }}>
-        <Icon name="angle down" />£{amount}
+        <Icon name="arrow down" />£{amount}
         <Label.Detail>Direct Debit</Label.Detail>
       </Label>
     </>

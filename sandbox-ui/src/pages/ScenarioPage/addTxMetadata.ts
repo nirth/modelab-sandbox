@@ -5,12 +5,12 @@ import { resolveTxColor } from './resolveTxColor'
 
 export const addTxMetadata = (
   currentIndex: number,
-  declinedTxIndicies: number[]
+  declinedTxsFks: string[]
 ) => (tx: Tx, index: number): TxDisplayMetadata => {
-  const { type, amount } = tx
+  const { id, type, amount } = tx
   const isCurrent = currentIndex === index
   const isPastTx = currentIndex > index
-  const isDeclined = declinedTxIndicies.includes(index)
+  const isDeclined = declinedTxsFks.includes(id)
 
   const [isNotification, isMoneyIn] = resolveTxDirection(type, amount)
   const color = resolveTxColor(isNotification, isMoneyIn)

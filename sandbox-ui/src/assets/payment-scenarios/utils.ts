@@ -1,10 +1,23 @@
 import { Scenario, Scenarios, Tx } from '../../sbdk/datamodel'
-import uuid from 'uuid'
+import { createTxId } from '../../sbdk/factories/txs'
 
-export const txFactory = (defaultValues: Tx): any => (overrides: any): any => ({
-  ...defaultValues,
-  ...overrides,
-})
+export const txFactory = (defaultValues: any): any => (overrides: any): any => {
+  const tx: Tx = {
+    id: '',
+    ...defaultValues,
+    ...overrides,
+  }
+
+  tx.id = createTxId(
+    tx.type,
+    tx.datetime,
+    tx.creditorBankAccount,
+    tx.debitorBankAccount,
+    tx.amount
+  )
+
+  return tx
+}
 
 const sortTxsByDate = (a: Tx, b: Tx) => {
   const dateA = new Date(a.datetime)
@@ -26,5 +39,5 @@ export const composeScenarios = (
     )
     .sort(sortTxsByDate)
 
-  return { id: uuid.v4(), slug, title, description, txs }
+  return { id: slug, slug, title, description, txs }
 }
