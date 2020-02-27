@@ -6,10 +6,10 @@ import { createCreditTransferTx } from './txs'
 export const actionToOutcome = (action: Action): Outcome | undefined => {
   switch (action.kind) {
     case ActionKind.Notification:
-      
+      console.log('Notification:', action)
       return {
         kind: OutcomeKind.Notification,
-        heading: 'Notification',
+        heading: action.payload.heading,
         body: action.payload.body,
         payload: {},
       }

@@ -46,7 +46,8 @@ export const Outcomes = (props: OutcomeProps) => {
                   content="Notification"
                   icon="bullhorn"
                 />
-                <Header content={outcome.heading} subheader={outcome.body} />
+                <Header content={outcome.heading} />
+                <p>{outcome.body} </p>
               </Segment>
             )
           case OutcomeKind.Declined:
@@ -74,17 +75,7 @@ export const Outcomes = (props: OutcomeProps) => {
               </Segment>
             )
           default:
-            return (
-              <Segment key={index}>
-                <Label
-                  color="purple"
-                  attached="top right"
-                  content="Unknown Outcome"
-                  icon="frown outline"
-                />
-                <Header content={safeStringify(outcome)} />
-              </Segment>
-            )
+            return null
         }
       })}
     </>

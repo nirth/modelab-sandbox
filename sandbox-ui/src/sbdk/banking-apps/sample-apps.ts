@@ -29,3 +29,26 @@ onDirectDebitPayment((tx) => {
 })
 
 `
+
+export const autoInvestSalary = `
+onTx((tx) => {
+  return true
+})
+
+onSalaryPayment((tx) => {
+  const {amount} = tx
+  const investmentPot = parseFloat(amount) * 0.3
+  const mediumRiskInvestment = Math.floor(investmentPot * 0.95).toString()
+  const highRiskInvestment = Math.floor(investmentPot * 0.05).toString()
+
+  notify(
+    ['NON_URGENT'],
+    'Salary Arrived: £' + amount,
+    \`Investment pot is \${investmentPot}.
+    £\${mediumRiskInvestment} -> ISA.
+    £\${highRiskInvestment} -> Bitcoin\`
+  )
+
+  return true
+})
+`

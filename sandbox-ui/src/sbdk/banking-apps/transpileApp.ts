@@ -30,7 +30,7 @@ export const transpileApp = (code: string): CompiledApp => {
     const document = null
 
     const actions = [];
-    const {onTx, onPayment, onDirectDebitAnnouncement, onDirectDebitPayment, notify} = api
+    const {onTx, onPayment, onDirectDebitAnnouncement, onDirectDebitPayment, onSalaryPayment, notify} = api
 
     ${code}
 
@@ -42,6 +42,8 @@ export const transpileApp = (code: string): CompiledApp => {
     const isPayment = tx.type === TxType.CreditTransfer
     const isDdAnnouncement = tx.type === TxType.DirectDebitAnnouncement
     const isDdPayment = tx.type === TxType.DirectDebitPayment
+    const isSalary =
+      tx.type === TxType.CreditTransfer && parseInt(tx.amount, 10) > 3000
 
     const invocationResults = []
     const actions: Action[] = []
@@ -55,6 +57,9 @@ export const transpileApp = (code: string): CompiledApp => {
         ? invoke(invocationResults, tx)
         : downTheSingularity,
       onDirectDebitPayment: isDdPayment
+        ? invoke(invocationResults, tx)
+        : downTheSingularity,
+      onSalaryPayment: isSalary
         ? invoke(invocationResults, tx)
         : downTheSingularity,
     }
