@@ -1,6 +1,7 @@
 {
   "name": "sandbox-ui",
   "version": "0.3.0",
+  "author": "David Sergey Grigoryan <me@davidsergey.com>",
   "private": true,
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",
