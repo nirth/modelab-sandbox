@@ -1,8 +1,7 @@
 import { defineFeature, loadFeature } from 'jest-cucumber'
 import { toPascalCasedTable } from './utils'
-import { IsoDate, Tx } from '../../src/datamodel'
+import { Tx } from '../../src/datamodel'
 import { createMonthlySalary, createDailyPayments } from '../../src/factories/txs'
-import { computeMonths } from '../../src/utils'
 
 const feature = loadFeature('./tests/features/RecurringTxs.feature')
 

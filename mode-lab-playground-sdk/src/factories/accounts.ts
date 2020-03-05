@@ -1,79 +1,37 @@
-import { Account, AccountKind, AccountPurpose } from '../datamodel'
-
-const currencies = {
-  GBP: ['British Pound', '£'],
-  EUR: ['Euro', '€'],
-  BTC: ['Bitcoin', '₿'],
-}
-
-const resolveCurrency = (ccyCode: string) => currencies[ccyCode]
+import { AssetsAccount, AssetKind } from '../datamodel'
+import { resolveCcyMetadata } from '../utils'
 
 export const createCashAccount = (
-  name: string,
-  accountPurpose: AccountPurpose, 
-  accountNumber: string,
-  initialBalance: string,
-  ccyCode: string
-): Account =>
-  createAccount(
-    AccountKind.CashAccount,
-    name,
-    accountPurpose, 
-    accountNumber,
-    initialBalance,
-    ccyCode
-  )
+	name: string,
+	accountNumber: string,
+	initialBalance: string,
+	ccyCode: string
+): AssetsAccount => createAccount(AssetKind.Cash, name, accountNumber, initialBalance, ccyCode)
 
-export const createSecuritiesAccount = (
-  name: string,
-  accountPurpose: AccountPurpose, 
-  accountNumber: string,
-  initialBalance: string,
-  ccyCode: string
-): Account =>
-  createAccount(
-    AccountKind.SecuritiesAccount,
-    name,
-    accountPurpose, 
-    accountNumber,
-    initialBalance,
-    ccyCode
-  )
-
-export const createBitcoinWallet = (
-  name: string,
-  accountPurpose: AccountPurpose, 
-  walletAddress: string,
-  initialBalance: string,
-  ccyCode: string
-): Account =>
-  createAccount(
-    AccountKind.BtcWallet,
-    name,
-    accountPurpose, 
-    walletAddress,
-    initialBalance,
-    ccyCode
-  )
+export const createNativeCryptoAccount = (
+	name: string,
+	walletAddress: string,
+	initialBalance: string,
+	ccyCode: string
+): AssetsAccount =>
+	createAccount(AssetKind.NativeCrypto, name, walletAddress, initialBalance, ccyCode)
 
 export const createAccount = (
-  kind: AccountKind,
-  name: string,
-  accountPurpose: AccountPurpose,
-  paymentInstrument: string,
-  initialBalance: string,
-  ccyCode: string
-): Account => {
-  const [ccy, ccySymbol] = resolveCurrency(ccyCode)
+	assetKind: AssetKind,
+	name: string,
+	paymentInstrument: string,
+	initialBalance: string,
+	ccyCode: string
+): AssetsAccount => {
+	const [_, ccy, ccySymbol] = resolveCcyMetadata(ccyCode)
 
-  return {
-    name,
-    kind,
-    accountPurpose,
-    paymentInstrument,
-    ccy,
-    ccyCode,
-    ccySymbol,
-    balance: initialBalance,
-  }
+	return {
+		name,
+		assetKind,
+		paymentInstrument,
+		ccy,
+		ccyCode,
+		ccySymbol,
+		balance: initialBalance,
+	}
 }

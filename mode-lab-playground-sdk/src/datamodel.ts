@@ -35,9 +35,9 @@ export type PaymentScenario = {
 	id: string
 	slug: string
 	title: string
-	protagonist: string
+	protagonist: Protagonist
 	description: string
-	accounts: Account[]
+	accounts: AssetsAccount[]
 	paymentTxs: Tx[]
 }
 
@@ -45,7 +45,7 @@ export type PaymentScenarioDisplayState = {
 	scenarioLoaded: boolean
 	readyToPlay: boolean
 	scenarioFinished: boolean
-	accounts: Account[]
+	accounts: AssetsAccount[]
 	bankingAppSourceCode: string
 	scenarioId: string
 	txIndex: number
@@ -58,24 +58,15 @@ export type PaymentScenarioDisplayState = {
 
 export type TxFactory<TxType> = (overrides: any) => TxType
 
-export enum AccountKind {
-	CashAccount = 'CASH_ACCOUNT',
-	SecuritiesAccount = 'SECURITIES_ACCOUNT',
-	BtcWallet = 'BTC_WALLET',
+export enum AssetKind {
+	Cash = 'CASH',
+	NativeCrypto = 'NATIVE_CRYPTO',
+	Security = 'SECURITY',
 }
 
-export enum AccountPurpose {
-	Current = 'CURRENT',
-	Savings = 'SAVINGS',
-	LowRiskInvestment = 'LOW_RISK_INVESTMENT',
-	MediumRiskInvestment = 'MEDIUM_RISK_INVESTMENT',
-	HighRiskInvestment = 'HIGH_RISK_INVESTMENT',
-}
-
-export type Account = {
-	kind: AccountKind
+export type AssetsAccount = {
+	assetKind: AssetKind
 	name: string
-	accountPurpose: string
 	paymentInstrument: string
 	ccy: string
 	ccyCode: string
@@ -83,8 +74,12 @@ export type Account = {
 	balance: string
 }
 
-export type Accounts = {
-	[ccyCode: string]: Account
+export type CashBankAccount = AssetsAccount & {
+	assetKind: AssetKind.Cash
+}
+
+export type NormalizedAccounts = {
+	[paymentInstrument: string]: AssetsAccount
 }
 
 export enum OutcomeKind {
@@ -100,4 +95,11 @@ export type Outcome = {
 	heading: string
 	body: string
 	payload: object
+}
+
+export type Protagonist = Actor
+
+export type Actor = {
+	name: string
+	accounts: NormalizedAccounts
 }

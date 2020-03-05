@@ -1,11 +1,11 @@
-import { PaymentScenario, Account, Tx } from '../datamodel'
+import { PaymentScenario, AssetsAccount, Tx, Protagonist } from '../datamodel'
 import { hyphenate } from '../utils'
 
 export const createPaymentScenario = (
 	title: string,
-	protagonist: string,
+	protagonist: Protagonist,
 	description: string,
-	accounts: Account[],
+	accounts: AssetsAccount[],
 	paymentTxs: Tx[]
 ): PaymentScenario => {
 	const slug = hyphenate(`${protagonist} ${title}`)

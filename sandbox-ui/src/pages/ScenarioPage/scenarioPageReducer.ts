@@ -4,15 +4,39 @@ import {
   createCashAccount,
   createSecuritiesAccount,
   createBitcoinWallet,
-} from '../../sbdk/factories/accounts'
+} from '../../../../mode-lab-playground-sdk/src/factories/accounts'
 import { ScenarioDisplayState, AccountPurpose } from '../../sbdk/datamodel'
-import { notifyOnLargeDirectDebit } from '../../sbdk/banking-apps'
+import { notifyOnLargeDirectDebit } from '../../../../mode-lab-playground-sdk/src/banking-apps'
 
 const scenarioPlayer = new ScenarioPlayer([
-  createCashAccount('Current Account',AccountPurpose.Current, '1100001', '0', 'GBP'),
-  createCashAccount('Savings Account', AccountPurpose.Savings, '1100002', '0', 'GBP'),
-  createSecuritiesAccount('ISA', AccountPurpose.MediumRiskInvestment, '1200001', '0', 'GBP'),
-  createBitcoinWallet('Bitcoin Wallet', AccountPurpose.HighRiskInvestment, '123xyz', '0', 'BTC'),
+  createCashAccount(
+    'Current Account',
+    AccountPurpose.Current,
+    '1100001',
+    '0',
+    'GBP'
+  ),
+  createCashAccount(
+    'Savings Account',
+    AccountPurpose.Savings,
+    '1100002',
+    '0',
+    'GBP'
+  ),
+  createSecuritiesAccount(
+    'ISA',
+    AccountPurpose.MediumRiskInvestment,
+    '1200001',
+    '0',
+    'GBP'
+  ),
+  createBitcoinWallet(
+    'Bitcoin Wallet',
+    AccountPurpose.HighRiskInvestment,
+    '123xyz',
+    '0',
+    'BTC'
+  ),
 ])
 scenarioPlayer.bankingAppSourceCode = notifyOnLargeDirectDebit
 

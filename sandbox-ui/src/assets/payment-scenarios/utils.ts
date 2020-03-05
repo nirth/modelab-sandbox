@@ -1,5 +1,5 @@
 import { Scenario, Scenarios, Tx } from '../../sbdk/datamodel'
-import { createTxId } from '../../sbdk/factories/txs'
+import { createTxId } from '../../../../mode-lab-playground-sdk/src/factories/txs'
 import { sortTxsByDate } from '../../utils'
 
 export const txFactory = (defaultValues: any): any => (overrides: any): any => {

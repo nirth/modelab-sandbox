@@ -21,6 +21,6 @@
     "noImplicitAny": false
   },
   "include": [
-    "src"
+    "src", "../mode-lab-playground-sdk/src/banking-apps", "../mode-lab-playground-sdk/src/factories"
   ]
 }

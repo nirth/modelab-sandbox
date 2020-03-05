@@ -47,6 +47,8 @@ onSalaryPayment((tx) => {
     \`Investment pot is \${investmentPot}.
     £\${mediumRiskInvestment} -> ISA.
     £\${highRiskInvestment} -> Bitcoin\`
+
+    
   )
 
   return true

@@ -14,7 +14,15 @@
 
 ## Ubiquotous Language
 
+**PaymentAccount:** Is an umbrella term to refer to the various ways to store assets, such as but not limited to: **Bank Account**, **Crypo Currency Wallets**, **Securities Accounts** for Investments, **Smart Contract Addresses**, etc.
+
+**Protagonist:** Main **Actor**, usually the one who is simulating customer in question, or any other significant party, and reason to run simulation. By convention protagonist is usually named _Alice_, but doesn’t have to be. In more complex scenarios - there could be no need for protagonist, since multiple parties have equal importance.
+
+**Actor:** One of the actors in the **PaymentScenario**, participant of the transaction, such as Customers, or other parties, e.g. Utilities Companies, Banks, etc.
+
 **PaymentScenario:** TBD
+
+
 
 **PlaygroundPlayer:** TBD
 
