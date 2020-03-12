@@ -1,7 +1,7 @@
 import { Tx, TxType } from '../datamodel'
-import { safeStringify } from '../../../sandbox-ui/src/utils'
 import { CompiledApp, Action } from './datamodel'
 import { createMarketApi } from './createMarketApi'
+import { safeStringify } from '../utils'
 
 /* eslint-disable no-new-func */
 
@@ -44,7 +44,7 @@ export const transpileApp = (code: string): CompiledApp => {
 		const isDdPayment = tx.type === TxType.DirectDebitPayment
 		const isSalary = tx.type === TxType.CreditTransfer && parseInt(tx.amount, 10) > 3000
 
-		const invocationResults = []
+		const invocationResults: any = []
 		const actions: Action[] = []
 		const api = createMarketApi(actions)
 

@@ -41,7 +41,7 @@ Feature: Easy and developer friendly way to create recurring txs for `PaymentSce
       | 2.80   | Carpe Diem Coffee | 200002                | Mode   | BankyBank | Alice            | 100001               |
     When converting it into daily payment starting with following from and to dates:
       | From Date  | To Date    |
-      | 2020-11-01 | 2021-01-01 |
+      | 2020-11-01 | 2021-01-30 |
     Then we expect to see following payments for coffee:
       | Datetime   | Amount | Creditor Customer | Creditor Bank Account | Sender | Receiver  | Debitor Customer | Debitor Bank Account |
       | 2020-11-01 | 2.80   | Carpe Diem Coffee | 200002                | Mode   | BankyBank | Alice            | 100001               |
@@ -72,6 +72,8 @@ Feature: Easy and developer friendly way to create recurring txs for `PaymentSce
       | 2020-11-26 | 2.80   | Carpe Diem Coffee | 200002                | Mode   | BankyBank | Alice            | 100001               |
       | 2020-11-27 | 2.80   | Carpe Diem Coffee | 200002                | Mode   | BankyBank | Alice            | 100001               |
       | 2020-11-28 | 2.80   | Carpe Diem Coffee | 200002                | Mode   | BankyBank | Alice            | 100001               |
+      | 2020-11-29 | 2.80   | Carpe Diem Coffee | 200002                | Mode   | BankyBank | Alice            | 100001               |
+      | 2020-11-30 | 2.80   | Carpe Diem Coffee | 200002                | Mode   | BankyBank | Alice            | 100001               |
       | 2020-12-01 | 2.80   | Carpe Diem Coffee | 200002                | Mode   | BankyBank | Alice            | 100001               |
       | 2020-12-02 | 2.80   | Carpe Diem Coffee | 200002                | Mode   | BankyBank | Alice            | 100001               |
       | 2020-12-03 | 2.80   | Carpe Diem Coffee | 200002                | Mode   | BankyBank | Alice            | 100001               |
@@ -100,6 +102,9 @@ Feature: Easy and developer friendly way to create recurring txs for `PaymentSce
       | 2020-12-26 | 2.80   | Carpe Diem Coffee | 200002                | Mode   | BankyBank | Alice            | 100001               |
       | 2020-12-27 | 2.80   | Carpe Diem Coffee | 200002                | Mode   | BankyBank | Alice            | 100001               |
       | 2020-12-28 | 2.80   | Carpe Diem Coffee | 200002                | Mode   | BankyBank | Alice            | 100001               |
+      | 2020-12-29 | 2.80   | Carpe Diem Coffee | 200002                | Mode   | BankyBank | Alice            | 100001               |
+      | 2020-12-30 | 2.80   | Carpe Diem Coffee | 200002                | Mode   | BankyBank | Alice            | 100001               |
+      | 2020-12-31 | 2.80   | Carpe Diem Coffee | 200002                | Mode   | BankyBank | Alice            | 100001               |
       | 2021-01-01 | 2.80   | Carpe Diem Coffee | 200002                | Mode   | BankyBank | Alice            | 100001               |
       | 2021-01-02 | 2.80   | Carpe Diem Coffee | 200002                | Mode   | BankyBank | Alice            | 100001               |
       | 2021-01-03 | 2.80   | Carpe Diem Coffee | 200002                | Mode   | BankyBank | Alice            | 100001               |
@@ -128,5 +133,7 @@ Feature: Easy and developer friendly way to create recurring txs for `PaymentSce
       | 2021-01-26 | 2.80   | Carpe Diem Coffee | 200002                | Mode   | BankyBank | Alice            | 100001               |
       | 2021-01-27 | 2.80   | Carpe Diem Coffee | 200002                | Mode   | BankyBank | Alice            | 100001               |
       | 2021-01-28 | 2.80   | Carpe Diem Coffee | 200002                | Mode   | BankyBank | Alice            | 100001               |
+      | 2021-01-29 | 2.80   | Carpe Diem Coffee | 200002                | Mode   | BankyBank | Alice            | 100001               |
+      | 2021-01-30 | 2.80   | Carpe Diem Coffee | 200002                | Mode   | BankyBank | Alice            | 100001               |
 
 

@@ -1,4 +1,4 @@
-import { addLeadingZeroes } from '../../src/utils'
+import { addLeadingZeroes } from '../../../src/utils'
 
 describe('Utility `addLeadingZeroes` should', () => {
 	it('do nothing when string is equal or longer than required length', () => {

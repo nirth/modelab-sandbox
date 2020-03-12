@@ -1,4 +1,4 @@
-import { computeMonths } from '../../src/utils'
+import { computeMonths } from '../../../src/utils'
 
 describe('Utility `computeMonths` should', () => {
 	it('be able to take create list of months between two dates', () => {

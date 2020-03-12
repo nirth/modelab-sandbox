@@ -1,21 +1,20 @@
 import { PaymentScenario, AssetsAccount, Tx, Protagonist } from '../datamodel'
-import { hyphenate } from '../utils'
+import { hyphenate, sortTxsByDate } from '../utils'
 
 export const createPaymentScenario = (
 	title: string,
 	protagonist: Protagonist,
 	description: string,
-	accounts: AssetsAccount[],
-	paymentTxs: Tx[]
+	txs: Tx[]
 ): PaymentScenario => {
 	const slug = hyphenate(`${protagonist} ${title}`)
+	const sortedTxs = txs.sort(sortTxsByDate)
 	return {
 		id: slug,
 		title,
 		slug: slug,
 		protagonist,
 		description,
-		accounts,
-		paymentTxs,
+		txs: sortedTxs,
 	}
 }

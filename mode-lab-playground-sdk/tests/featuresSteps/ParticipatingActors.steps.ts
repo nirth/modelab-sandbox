@@ -2,22 +2,22 @@ import { defineFeature, loadFeature } from 'jest-cucumber'
 import { toPascalCasedTable } from './utils'
 import { createAccount } from '../../src/factories/accounts'
 import { createProtagonist } from '../../src/factories/actors'
-import { AssetsAccount, AssetKind, Protagonist } from '../../src/datamodel'
+import { AssetsAccount, Protagonist } from '../../src/datamodel'
 import { toNormalizedAccounts } from '../../src/utils'
 
 const feature = loadFeature('./tests/features/ParticipatingActors.feature')
 
-defineFeature(feature, test => {
+defineFeature(feature, (test) => {
 	test('Create Protagonist – Alice with her bank and crypto accounts', ({ given, when, then }) => {
 		let protagonistDescription: any
 		let accountsDescriptions: any
 		let actualProtagonist: Protagonist
 
-		given('protagonist Alice:', table => {
+		given('protagonist Alice:', (table) => {
 			protagonistDescription = toPascalCasedTable(table).shift()
 		})
 
-		given('her bank accounts and crypto wallets:', table => {
+		given('her bank accounts and crypto wallets:', (table) => {
 			accountsDescriptions = toPascalCasedTable(table)
 		})
 
@@ -32,7 +32,7 @@ defineFeature(feature, test => {
 			)
 		})
 
-		then('we expect to see our protagonist Alice with following accounts:', table => {
+		then('we expect to see our protagonist Alice with following accounts:', (table) => {
 			const expectedProtagonist: Protagonist = {
 				name: 'Alice',
 				accounts: toNormalizedAccounts(toPascalCasedTable(table) as AssetsAccount[]),

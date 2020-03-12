@@ -37,8 +37,9 @@ export type PaymentScenario = {
 	title: string
 	protagonist: Protagonist
 	description: string
-	accounts: AssetsAccount[]
-	paymentTxs: Tx[]
+	txs: Tx[]
+	startDate?: IsoDate
+	endDate?: IsoDate
 }
 
 export type PaymentScenarioDisplayState = {
@@ -95,6 +96,24 @@ export type Outcome = {
 	heading: string
 	body: string
 	payload: object
+}
+
+export enum ScenarioEventType {
+	Unkonwn = 'UNKNOWN',
+	UnknownPayment = 'UNKNOWN_PAYMENT',
+	DayStart = 'DAY_START',
+	DayEnd = 'DAY_END',
+	IncomingPayment = 'INCOMING_PAYMENT',
+	OutgoingPayment = 'OUTGOING_PAYMENT',
+	DirectDebitAnnouncement = 'DIRECT_DEBIT_ANNOUNCEMENT',
+	DirectDebitPayment = 'DIRECT_DEBIT_PAYMENT',
+	ScenarioFinished = 'SCENARIO_FINISHED',
+}
+
+export type ScenarioEvent = {
+	type: ScenarioEventType
+	datetime: IsoDate
+	tx?: Tx
 }
 
 export type Protagonist = Actor

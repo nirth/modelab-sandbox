@@ -1,4 +1,4 @@
-import { resolveCcyMetadata } from '../../src/utils'
+import { resolveCcyMetadata } from '../../../src/utils'
 
 describe('Utilify `resolveCcyMetadata` should', () => {
 	it('successfuly resolve metadata for known currency', () => {
@@ -7,7 +7,7 @@ describe('Utilify `resolveCcyMetadata` should', () => {
 			EUR: ['EUR', 'Euro', '€'],
 			BTC: ['BTC', 'Bitcoin', '₿'],
 		}
-		Object.entries(currencies).forEach(([ccyCode, expected]) => {
+		Object.entries(currencies).forEach(([ccyCode, expected]: any) => {
 			const actual = resolveCcyMetadata(ccyCode)
 
 			expect(actual).toEqual(expected)
@@ -17,7 +17,7 @@ describe('Utilify `resolveCcyMetadata` should', () => {
 	it('throw error when currency is uknown', () => {
 		const currencies = ['ABC', 'XYZ', 'FOO', 'BAR']
 
-		currencies.forEach(unknownCcyCode => {
+		currencies.forEach((unknownCcyCode: any) => {
 			expect(() => resolveCcyMetadata(unknownCcyCode)).toThrowError(
 				`Unable to resolve currency for code ${unknownCcyCode}`
 			)

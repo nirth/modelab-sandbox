@@ -1,22 +1,22 @@
 import { defineFeature, loadFeature } from 'jest-cucumber'
 import { toPascalCasedTable } from './utils'
-import { createPaymentScenario } from '../../src/factories/scenarios'
+import { createPaymentScenario } from '../../src/factories'
 import { PaymentScenario } from '../../src/datamodel'
 
 const feature = loadFeature('./tests/features/PaymentScenarios.feature')
 
-defineFeature(feature, test => {
+defineFeature(feature, (test) => {
 	test('Create new PaymentScenairo', ({ given, when, then }) => {
 		let scenarios: PaymentScenario[] = []
 
-		when('attempting to create PaymentScenarios with following information:', table => {
+		when('attempting to create PaymentScenarios with following information:', (table) => {
 			const scenariosDetails = toPascalCasedTable(table)
 			scenarios = scenariosDetails.map(({ title, protagonist }) =>
-				createPaymentScenario(title, protagonist, '', [], [])
+				createPaymentScenario(title, protagonist, '', [])
 			)
 		})
 
-		then('we expect PaymentScenarios to be initialized with following informaiton:', table => {
+		then('we expect PaymentScenarios to be initialized with following informaiton:', (table) => {
 			const scenarios = toPascalCasedTable(table) as PaymentScenario[]
 
 			scenarios.forEach((expectedScenarioDetails: any, index: number) => {

@@ -1,4 +1,4 @@
-import { hyphenate } from '../../src/utils'
+import { hyphenate } from '../../../src/utils'
 
 describe('Utility `hyphenate` should', () => {
 	it('hyphenate strings', () => {
@@ -8,7 +8,7 @@ describe('Utility `hyphenate` should', () => {
 			['i-love-you']: 'I love you',
 		}
 
-		Object.entries(expectedAndInputs).forEach(([expected, input]) => {
+		Object.entries(expectedAndInputs).forEach(([expected, input]: any) => {
 			const actual = hyphenate(input)
 			expect(actual).toBe(expected)
 		})
@@ -21,7 +21,7 @@ describe('Utility `hyphenate` should', () => {
 			['id-love-to-meet-you']: 'I’d love to meet you?!',
 		}
 
-		Object.entries(expectedAndInputs).forEach(([expected, input]) => {
+		Object.entries(expectedAndInputs).forEach(([expected, input]: any) => {
 			const actual = hyphenate(input)
 			expect(actual).toBe(expected)
 		})

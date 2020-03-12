@@ -1,4 +1,4 @@
-import { Tx } from "../sbdk/datamodel"
+import { Tx } from '../../../mode-lab-playground-sdk/src/datamodel'
 
 export const padNumber = (integer: number, size = 2): string => {
   let result = integer.toString()

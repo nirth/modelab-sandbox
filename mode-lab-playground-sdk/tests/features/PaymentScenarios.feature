@@ -11,5 +11,3 @@ Feature: Creating PaymentScenarios
       | Salary Payments     | Bob         | bob-salary-payments       | bob-salary-payments       |
       | Salary and Expenses | Clare       | clare-salary-and-expenses | clare-salary-and-expenses |
 
-
-

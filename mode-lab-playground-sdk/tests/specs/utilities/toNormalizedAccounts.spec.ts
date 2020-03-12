@@ -1,5 +1,5 @@
-import { hyphenate, toNormalizedAccounts } from '../../src/utils'
-import { createCashAccount } from '../../src/factories/accounts'
+import { hyphenate, toNormalizedAccounts } from '../../../src/utils'
+import { createCashAccount } from '../../../src/factories/accounts'
 
 describe('Utility `toNormalizedAccounts` should', () => {
 	it('take a list of `AssetsAccount`s and transform them into a map', () => {

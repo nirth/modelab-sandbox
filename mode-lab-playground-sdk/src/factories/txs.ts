@@ -6,9 +6,10 @@ import {
 	IsoDate,
 	Tx,
 } from '../datamodel'
-import { computeMonths } from '../utils'
+import { computeMonths, safeStringify, computePotentiallyAlternatingAmount } from '../utils'
 import { fromString as uuidFromString } from 'uuidv4'
 import { computeAllDays } from '../utils/date-ranges'
+import { formatISO, sub } from 'date-fns'
 
 export const createTxId = (
 	type: TxType,
@@ -109,6 +110,38 @@ export const createDirectDebitPaymentTx = (
 		debitorBankAccount
 	)
 
+export const createDirectDebitAnnouncementAndPaymentTxs = (
+	datetime: string,
+	amount: string,
+	creditorCustomer: string,
+	creditorBankAccount: string,
+	sender: string,
+	receiver: string,
+	debitorCustomer: string,
+	debitorBankAccount: string
+): [DirectDebitAnnouncementTx, DirectDebitPaymentTx] => [
+	createDirectDebitAnnouncementTx(
+		formatISO(sub(new Date(datetime), { days: 10 }), { representation: 'date' }),
+		amount,
+		creditorCustomer,
+		creditorBankAccount,
+		sender,
+		receiver,
+		debitorCustomer,
+		debitorBankAccount
+	),
+	createDirectDebitPaymentTx(
+		datetime,
+		amount,
+		creditorCustomer,
+		creditorBankAccount,
+		sender,
+		receiver,
+		debitorCustomer,
+		debitorBankAccount
+	),
+]
+
 export const createMonthlySalary = (
 	startDatetime: IsoDate,
 	endDatetime: IsoDate,
@@ -140,7 +173,7 @@ export const createMonthlySalary = (
 export const createDailyPayments = (
 	startDatetime: IsoDate,
 	endDatetime: IsoDate,
-	amount: string,
+	amount: string | string[],
 	creditorCustomer: string,
 	creditorBankAccount: string,
 	sender: string,
@@ -151,10 +184,10 @@ export const createDailyPayments = (
 	const days = computeAllDays(startDatetime, endDatetime)
 
 	return days.map(
-		(datetime: IsoDate): Tx =>
+		(datetime: IsoDate, index: number): Tx =>
 			createCreditTransferTx(
 				datetime,
-				amount,
+				computePotentiallyAlternatingAmount(amount, index),
 				creditorCustomer,
 				creditorBankAccount,
 				sender,
