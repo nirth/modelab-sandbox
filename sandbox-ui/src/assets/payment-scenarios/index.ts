@@ -1,4 +1,4 @@
-import { Scenarios } from '../../datamodel/core'
+import { Scenarios } from '../../sbdk/datamodel'
 
 import { composeScenarios } from './utils'
 
@@ -9,6 +9,7 @@ import { utilityBills } from './utility-bills'
 import { coupleOfLargeDds } from './couple-of-large-dds'
 
 export const scenarios: Scenarios = [
+  coupleOfLargeDds,
   stableSalary,
   composeScenarios(
     'Stable Salary and Utilities',

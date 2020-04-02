@@ -1,6 +1,6 @@
 import uuid from 'uuid'
 import { txFactory } from './utils'
-import { Scenario, TxType } from '../../datamodel/core'
+import { Scenario, TxType } from '../../sbdk/datamodel'
 
 const directDebitAnnouncement = txFactory({
   type: TxType.DirectDebitAnnouncement,
@@ -11,7 +11,7 @@ const directDebitAnnouncement = txFactory({
   sender: 'Banky Bank',
   receiver: 'Mode',
   debitorCustomer: 'Alice',
-  debitorBankAccount: '343434',
+  debitorBankAccount: '1100001',
 })
 
 const directDebitPayment = txFactory({

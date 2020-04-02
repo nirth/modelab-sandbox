@@ -1,3 +1,5 @@
+import { Tx } from '../../../mode-lab-playground-sdk/src/datamodel'
+
 export const padNumber = (integer: number, size = 2): string => {
   let result = integer.toString()
   while (result.length < size) {
@@ -22,4 +24,14 @@ export const safeStringify = (data: any): string => {
   } catch (error) {
     return '[Unable to JSON.stringify]'
   }
+}
+
+export const isDefinedObject = (candidate: any): boolean =>
+  typeof candidate === 'object' && candidate !== null && candidate !== undefined
+
+export const sortTxsByDate = (a: Tx, b: Tx) => {
+  const dateA = new Date(a.datetime)
+  const dateB = new Date(b.datetime)
+
+  return dateA.valueOf() - dateB.valueOf()
 }

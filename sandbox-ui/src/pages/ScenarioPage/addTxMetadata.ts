@@ -1,24 +1,28 @@
-import { Tx } from '../../datamodel/core'
+import { Tx } from '../../sbdk/datamodel'
 import { TxDisplayMetadata } from './datamodel'
 import { resolveTxDirection } from './resolveTxDirection'
 import { resolveTxColor } from './resolveTxColor'
 
 export const addTxMetadata = (
   currentIndex: number,
-  declinedTxIndicies: number[]
+  settledTxsFks: string[],
+  declinedTxsFks: string[]
 ) => (tx: Tx, index: number): TxDisplayMetadata => {
-  const { type, amount } = tx
+  const { id, type, amount } = tx
   const isCurrent = currentIndex === index
-  const isPastTx = currentIndex > index
-  const isDeclined = declinedTxIndicies.includes(index)
+  
+  const isSettled = settledTxsFks.includes(id)
+  const isDeclined = declinedTxsFks.includes(id)
+  const isPastTx = isSettled || isDeclined
 
   const [isNotification, isMoneyIn] = resolveTxDirection(type, amount)
   const color = resolveTxColor(isNotification, isMoneyIn)
 
   return {
     isCurrent,
-    isDeclined,
     isPastTx,
+    isDeclined,
+    isSettled,
     isNotification,
     isMoneyIn,
     color,

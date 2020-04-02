@@ -1,4 +1,4 @@
-import { HealthStatus } from '../datamodel/core'
+import { HealthStatus } from '../sbdk/datamodel'
 
 const HealthResolver = {
   Query: {

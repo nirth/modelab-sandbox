@@ -1,17 +1,22 @@
 import uuid from 'uuid'
 import { txFactory } from './utils'
-import { Scenario, TxType } from '../../datamodel/core'
+import {
+  Scenario,
+  TxType,
+  TxFactory,
+  CreditTransferTx,
+} from '../../sbdk/datamodel'
 
-const createSalary = txFactory({
-  type: TxType.Payment,
+const createSalary: TxFactory<CreditTransferTx> = txFactory({
+  type: TxType.CreditTransfer,
   datetime: '2020-01-10T06:30:00.500Z',
   amount: '3500.00',
-  orderingCustomer: 'Acme Corm',
-  orderingBankAccount: '121212',
+  debitorCustomer: 'Acme Corm',
+  debitorBankAccount: '121212',
   sender: 'BankyBank',
   receiver: 'Mode',
-  beneficiaryCustomer: 'Alice',
-  beneficiaryBankAccount: '343434',
+  creditorCustomer: 'Alice',
+  creditorBankAccount: '1100001',
 })
 
 export const stableSalary: Scenario = {

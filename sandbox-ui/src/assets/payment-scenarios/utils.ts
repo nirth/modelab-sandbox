@@ -1,8 +1,23 @@
-import { Scenario, Scenarios, Tx } from '../../datamodel/core'
-import uuid from 'uuid'
+import { Scenario, Scenarios, Tx } from '../../sbdk/datamodel'
+import { createTxId } from '../../../../mode-lab-playground-sdk/src/factories/txs'
+import { sortTxsByDate } from '../../utils'
 
-export const txFactory = (payload: Tx) => (overrides: any): Tx => {
-  return { ...payload, ...overrides }
+export const txFactory = (defaultValues: any): any => (overrides: any): any => {
+  const tx: Tx = {
+    id: '',
+    ...defaultValues,
+    ...overrides,
+  }
+
+  tx.id = createTxId(
+    tx.type,
+    tx.datetime,
+    tx.creditorBankAccount,
+    tx.debitorBankAccount,
+    tx.amount
+  )
+
+  return tx
 }
 
 export const composeScenarios = (
@@ -16,12 +31,7 @@ export const composeScenarios = (
       (nextTxs: Tx[], scenario: Scenario) => nextTxs.concat(scenario.txs),
       []
     )
-    .sort((a: Tx, b: Tx) => {
-      const dateA = new Date(a.datetime)
-      const dateB = new Date(b.datetime)
+    .sort(sortTxsByDate)
 
-      return dateA.valueOf() - dateB.valueOf()
-    })
-
-  return { id: uuid.v4(), slug, title, description, txs }
+  return { id: slug, slug, title, description, txs }
 }

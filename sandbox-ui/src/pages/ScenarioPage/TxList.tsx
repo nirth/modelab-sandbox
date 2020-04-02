@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Tx } from '../../datamodel/core'
+import { Tx } from '../../sbdk/datamodel'
 import { Segment, SemanticCOLORS, Label } from 'semantic-ui-react'
 import { TxDisplay } from './TxDisplay'
 import { addTxMetadata } from './addTxMetadata'
@@ -8,11 +8,12 @@ import { TxDisplayMetadata } from './datamodel'
 type TxListProps = {
   currentTxIndex: number
   txs: Tx[]
-  declinedTxIndicies: number[]
+  settledTxFks: string[]
+  declinedTxFks: string[]
 }
 
 export const TxList = (props: TxListProps) => {
-  const { currentTxIndex, txs, declinedTxIndicies } = props
+  const { currentTxIndex, txs, settledTxFks, declinedTxFks } = props
 
   useEffect(() => {
     // TODO: I should use `useRef`, but it gave me too much headache.
@@ -38,7 +39,7 @@ export const TxList = (props: TxListProps) => {
       }}
     >
       {txs
-        .map(addTxMetadata(currentTxIndex, declinedTxIndicies))
+        .map(addTxMetadata(currentTxIndex, settledTxFks, declinedTxFks))
         .map((metadata: TxDisplayMetadata) => {
           const {
             isCurrent,

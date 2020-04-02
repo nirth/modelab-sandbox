@@ -1,15 +1,16 @@
 import gql from 'graphql-tag'
 import { scenarios } from '../assets/payment-scenarios'
-import { Scenario } from '../datamodel/core'
+import { Scenario } from '../sbdk/datamodel'
 
 const ScenariosTypes = gql`
   enum TxType {
     DIRECT_DEBIT_PAYMENT
     DIRECT_DEBIT_ANNOUNCEMENT
-    PAYMENT
+    CREDIT_TRANSFER
   }
 
   type DirectDebitPaymentTx {
+    id: String
     type: TxType
     datetime: String
     amount: String
@@ -22,6 +23,7 @@ const ScenariosTypes = gql`
   }
 
   type DirectDebitAnnouncementTx {
+    id: String
     type: TxType
     datetime: String
     amount: String
@@ -33,19 +35,20 @@ const ScenariosTypes = gql`
     debitorBankAccount: String
   }
 
-  type PaymentTx {
+  type CreditTransferTx {
+    id: String
     type: TxType
     datetime: String
     amount: String
-    orderingCustomer: String
-    orderingBankAccount: String
+    creditorCustomer: String
+    creditorBankAccount: String
     sender: String
     receiver: String
-    beneficiaryCustomer: String
-    beneficiaryBankAccount: String
+    debitorCustomer: String
+    debitorBankAccount: String
   }
 
-  union Tx = DirectDebitAnnouncementTx | DirectDebitPaymentTx | PaymentTx
+  union Tx = DirectDebitAnnouncementTx | DirectDebitPaymentTx | CreditTransferTx
 
   type Scenario {
     id: String
@@ -99,7 +102,7 @@ const ScenariosResolver = {
           unionPatch({
             DIRECT_DEBIT_ANNOUNCEMENT: 'DirectDebitAnnouncementTx',
             DIRECT_DEBIT_PAYMENT: 'DirectDebitPaymentTx',
-            PAYMENT: 'PaymentTx',
+            CREDIT_TRANSFER: 'CreditTransferTx',
           })
         )
         return {

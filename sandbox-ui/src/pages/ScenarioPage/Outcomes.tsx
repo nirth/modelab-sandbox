@@ -1,9 +1,11 @@
 import React from 'react'
-import { Action, ActionType } from '../../datamodel/marketplace'
 import { Segment, Label, Header } from 'semantic-ui-react'
+import { Account, Outcome, OutcomeKind } from '../../sbdk/datamodel'
+import { safeStringify } from '../../utils'
 
 type OutcomeProps = {
-  outcomes: Action[]
+  accounts: Account[]
+  outcomes: Outcome[]
 }
 
 const randomEnding = () => {
@@ -20,57 +22,61 @@ const randomEnding = () => {
 }
 
 export const Outcomes = (props: OutcomeProps) => {
-  const { outcomes } = props
+  const { outcomes, accounts } = props
 
   return (
     <>
+      <Header as="h2" content="Accounts" />
+      {accounts.map((account: Account) => (
+        <Header
+          key={`${account.ccyCode}${account.paymentInstrument}`}
+          content={account.name}
+          subheader={`${account.ccySymbol}${account.balance}`}
+        />
+      ))}
       <Header as="h2" content="Outcomes" />
-      {outcomes.map((action: Action, index: number) => {
-        if (action.type === ActionType.Notification) {
-          return (
-            <Segment key={index}>
-              <Label
-                color="blue"
-                attached="top right"
-                content="Notification"
-                icon="bullhorn"
-              />
-              <Header
-                content={action.payload.heading}
-                subheader={action.payload.body}
-              />
-            </Segment>
-          )
-        } else if (action.type === ActionType.Declined) {
-          return (
-            <Segment key={index}>
-              <Label
-                color="red"
-                attached="top right"
-                content="Declined"
-                icon="frown outline"
-              />
-              <Header
-                content={action.payload.heading}
-                subheader={action.payload.body}
-              />
-            </Segment>
-          )
-        } else if (action.type === ActionType.ScenarioFinished) {
-          return (
-            <Segment key={index}>
-              <Label
-                color="purple"
-                attached="top right"
-                content="Scenario Finished"
-                icon="frown outline"
-              />
-              <Header content={randomEnding()} />
-            </Segment>
-          )
+      {outcomes.reverse().map((outcome: Outcome, index: number) => {
+        switch (outcome.kind) {
+          case OutcomeKind.Notification:
+            return (
+              <Segment key={index}>
+                <Label
+                  color="blue"
+                  attached="top right"
+                  content="Notification"
+                  icon="bullhorn"
+                />
+                <Header content={outcome.heading} />
+                <p>{outcome.body} </p>
+              </Segment>
+            )
+          case OutcomeKind.Declined:
+            return (
+              <Segment key={index}>
+                <Label
+                  color="red"
+                  attached="top right"
+                  content="Declined"
+                  icon="frown outline"
+                />
+                <Header content={outcome.heading} subheader={outcome.body} />
+              </Segment>
+            )
+          case OutcomeKind.ScenarioFinished:
+            return (
+              <Segment key={index}>
+                <Label
+                  color="purple"
+                  attached="top right"
+                  content="Scenario Finished"
+                  icon="frown outline"
+                />
+                <Header content={randomEnding()} />
+              </Segment>
+            )
+          default:
+            return null
         }
-
-        return 'Unknown Outcome'
       })}
     </>
   )

@@ -1,4 +1,4 @@
-import { TxType } from '../../datamodel/core'
+import { TxType } from '../../sbdk/datamodel'
 
 // Crude, dirty, and fast way to calculate directionality of transaction.
 export const resolveTxDirection = (
@@ -7,7 +7,7 @@ export const resolveTxDirection = (
 ): [boolean, boolean] => {
   const isNotification = type === TxType.DirectDebitAnnouncement
   const isMoneyIn =
-    !isNotification && parseFloat(amount) >= 0 && type === TxType.Payment
+    !isNotification && parseFloat(amount) >= 0 && type === TxType.CreditTransfer
 
   return [isNotification, isMoneyIn]
 }
